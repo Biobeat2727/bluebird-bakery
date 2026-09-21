@@ -11,6 +11,16 @@ export const FRAME_IDS = [
 ];
 
 /**
+ * Turn-around art (tools/build_turn_frames.py), used only if registration.json
+ * lists it. Without it the motion system hides the mirror swap inside a hop.
+ *   turn-30, turn-60  the body swinging round toward the viewer
+ *   turn-front        facing the viewer head on. It is symmetrical, so the
+ *                     mirror swap happens on this frame and cannot be seen.
+ * The second half of the turn is the same frames, mirrored.
+ */
+export const OPTIONAL_FRAME_IDS = ['turn-30', 'turn-60', 'turn-front'];
+
+/**
  * How long each frame is held, in ms. One object, tunable at runtime from the
  * sandbox panel. Keys are step names rather than frame ids so the same frame
  * can be held for different lengths in different sequences.
@@ -28,6 +38,7 @@ export const DEFAULT_TIMING = {
   settle: 100,
   perch: 180,
   blink: 120,
+  turn: 40,       // each step of a turn-around; it happens mid-hop, so it is quick
 };
 
 /**
@@ -62,6 +73,17 @@ export const SEQUENCES = {
     ['blink', 'blink'],
     ['idle', 'idle'],
   ],
+  // A turn-around is turnOut, mirror the sprite, then turnIn. The art was drawn
+  // from the idle pose, so callers start and end it there.
+  turnOut: [
+    ['turn-30', 'turn'],
+    ['turn-60', 'turn'],
+    ['turn-front', 'turn'],
+  ],
+  turnIn: [
+    ['turn-60', 'turn'],
+    ['turn-30', 'turn'],
+  ],
 };
 
 /** Resting frame the bird holds when perched or when motion is reduced. */
@@ -90,8 +112,9 @@ export async function loadFrames(basePath = './frames/') {
     return r.json();
   });
 
+  const optional = OPTIONAL_FRAME_IDS.filter((id) => registration.frames[id]);
   const images = {};
-  await Promise.all(FRAME_IDS.map(async (id) => {
+  await Promise.all([...FRAME_IDS, ...optional].map(async (id) => {
     const meta = registration.frames[id];
     if (!meta) throw new Error(`registration.json is missing frame "${id}"`);
     const img = new Image();
@@ -105,5 +128,10 @@ export async function loadFrames(basePath = './frames/') {
     images[id] = img;
   }));
 
-  return { registration, images, srcOf: (id) => images[id].src };
+  return {
+    registration,
+    images,
+    srcOf: (id) => images[id].src,
+    hasTurn: optional.length === OPTIONAL_FRAME_IDS.length,
+  };
 }

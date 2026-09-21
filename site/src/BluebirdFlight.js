@@ -21,8 +21,21 @@
 import { SEQUENCES, REST_FRAME } from '../../sandbox/src/bluebirdFrames.js';
 import { BluebirdAnimator } from '../../sandbox/src/BluebirdAnimator.js';
 
-/** Feet centre, in canvas px left of the anchor (the eye). Measured from idle. */
-const FOOT_DX = -150;
+/** An eased mirror, used only in the air, where a quick bank reads fine. */
+const TURN_MS = 190;
+/** Easing the pin point when the pose changes between airborne and grounded. */
+const PIVOT_MS = 140;
+
+/** Fast away from the perch, then a long soft deceleration into the next one. */
+const easeFlight = (u) => 1 - (1 - u) ** 2.6;
+const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+
+/** How far each wing pose lifts (+) or drops (-) the body, as a fraction of sprite height. */
+const BOB = { 'wings-up': -0.05, 'wings-mid': 0, 'wings-down': 0.06, glide: 0.015 };
+/** Nose-up pitch, in degrees, held through the final approach. */
+const FLARE = -9;
+/** Flights longer than this (px) get a glide between wingbeats. */
+const GLIDE_OVER = 480;
 
 const easeInOut = (u) => (u < 0.5 ? 2 * u * u : 1 - ((-2 * u + 2) ** 2) / 2);
 
@@ -43,7 +56,19 @@ export class BluebirdFlight {
     this.anchor = anchor;
     this.meta = meta;
     this.restFoot = meta[REST_FRAME].footOffsetY;
-    this.footX = anchor.x + FOOT_DX;
+
+    // The frames are registered to the eye, so the feet are somewhere different
+    // in every pose. Each frame carries a pivotX (tools/measure_pivots.py): the
+    // feet for grounded poses, the centre of mass in the air. The sprite is
+    // pinned to the perch, and mirrored, about that x.
+    const restPivot = meta[REST_FRAME].pivotX ?? anchor.x - 37;
+    this.pivotOf = (id) => (id && meta[id].pivotX) ?? restPivot;
+    this.pivot = restPivot;         // pin point currently rendered (canvas px); eased
+    this.flip = 1;                  // scaleX currently rendered, 1..-1; eased toward facing
+    this.squash = 1;                // scaleY about the foot line: squash and stretch
+    this.tilt = 0;                  // pitch in degrees, + is nose down; follows the flight path
+    this.bob = 0;                   // px the body rides up and down with each wingbeat
+    this.tweens = {};
 
     this.el = document.createElement('div');
     this.el.className = 'bluebird';
@@ -51,13 +76,17 @@ export class BluebirdFlight {
     this.img = document.createElement('img');
     this.img.alt = '';
     this.img.draggable = false;
-    // Flip about the feet so turning round never slides the bird off its perch.
-    this.img.style.transformOrigin = `${(this.footX / canvas.width) * 100}% 50%`;
     this.el.appendChild(this.img);
+    // Taps land on a box around the body only. The sprite's transparent margins
+    // overlap whatever the bird stands on, and must not steal its clicks.
+    this.hit = document.createElement('span');
+    this.hit.className = 'bluebird-hit';
+    this.el.appendChild(this.hit);
     document.body.appendChild(this.el);
 
     this.anim = new BluebirdAnimator(this.img, { frames, timing, reducedMotion });
-    this.anim.onFrame = () => this.#render();
+    this.lastFrame = null;
+    this.anim.onFrame = (id) => this.#onFrame(id);
 
     this.pos = { x: 0, y: 0 };      // feet point, document coords
     this.facing = 1;                // 1 = right (as drawn), -1 = left
@@ -71,7 +100,7 @@ export class BluebirdFlight {
     this.leaveAfterHop = false;
     this.hopDx = 0;                 // how far the bird has hopped along its perch
     this.scrollTimer = null;
-    this.blinkTimer = null;
+    this.idleTimer = null;
 
     this.setHeight(height);
   }
@@ -101,7 +130,7 @@ export class BluebirdFlight {
       this.#render();
       this.#flyTo(first);
       window.addEventListener('scroll', this.#onScroll, { passive: true });
-      this.img.addEventListener('click', this.#onTap);
+      this.hit.addEventListener('click', this.#onTap);
     }
 
     window.addEventListener('resize', this.#onLayout);
@@ -114,7 +143,7 @@ export class BluebirdFlight {
     window.removeEventListener('resize', this.#onLayout);
     if (this.resizeObs) this.resizeObs.disconnect();
     clearTimeout(this.scrollTimer);
-    clearTimeout(this.blinkTimer);
+    clearTimeout(this.idleTimer);
     this.anim.destroy();
     this.el.remove();
   }
@@ -126,7 +155,7 @@ export class BluebirdFlight {
     const r = perch.getBoundingClientRect();
     const at = Number(perch.dataset.perchAt ?? 0.85);
     const dy = Number(perch.dataset.perchDy ?? 0);
-    const margin = Math.max(this.footX, this.canvas.width - this.footX) * this.k;
+    const margin = this.canvas.width * this.k * 0.6;
     const docW = document.documentElement.clientWidth;
     const hop = perch === this.perchedOn ? this.hopDx : 0;
     const x = r.left + window.scrollX + r.width * at + hop;
@@ -152,11 +181,16 @@ export class BluebirdFlight {
       if (y > headroom && y < vh * 0.9) return current;
     }
 
+    // Settled, it only moves for a perch in the comfortable middle of the screen.
+    // Coming back from a fly-off, anywhere on screen it can stand will do.
+    const min = this.away ? headroom : Math.max(headroom, vh * 0.15);
+    const max = this.away ? vh * 0.94 : vh * 0.8;
+
     let best = null;
     let bestScore = Infinity;
     for (const p of this.perches) {
       const y = topOf(p);
-      if (y < Math.max(headroom, vh * 0.15) || y > vh * 0.8) continue;
+      if (y < min || y > max) continue;
       const score = Math.abs(y - vh * 0.45);
       if (score < bestScore) { best = p; bestScore = score; }
     }
@@ -184,10 +218,63 @@ export class BluebirdFlight {
   #render() {
     const id = this.anim ? this.anim.currentFrame : null;
     const foot = (id && this.meta[id].footOffsetY) ?? this.restFoot;
-    const x = this.pos.x - this.footX * this.k;
-    const y = this.pos.y - (this.anchor.y + foot) * this.k;
+    const footLine = ((this.anchor.y + foot) / this.canvas.height) * 100;
+    const x = this.pos.x - this.pivot * this.k;
+    const y = this.pos.y - (this.anchor.y + foot) * this.k - this.bob;
     this.el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
-    this.img.style.transform = this.facing === 1 ? '' : 'scaleX(-1)';
+    // Mirror about the pin point. On a perch, squash about the feet so they stay
+    // put; in the air, pitch about the middle of the body.
+    const grounded = id && this.meta[id].footOffsetY != null;
+    this.img.style.transformOrigin = `${(this.pivot / this.canvas.width) * 100}% ${grounded ? footLine.toFixed(2) : 50}%`;
+    // The tilt is applied before the mirror, so nose-down stays nose-down facing either way.
+    this.img.style.transform = this.flip === 1 && this.squash === 1 && this.tilt === 0
+      ? '' : `scale(${this.flip.toFixed(3)}, ${this.squash.toFixed(3)}) rotate(${this.tilt.toFixed(2)}deg)`;
+  }
+
+  /**
+   * Grounded to grounded, the pin point snaps to the new pose's feet: that is
+   * what keeps them planted through crouch, impact and settle. Into or out of
+   * the air there are no feet to plant, so it eases instead of jumping.
+   */
+  #onFrame(id) {
+    const airborne = (f) => f !== null && this.meta[f].footOffsetY == null;
+    const eased = this.lastFrame !== null && (airborne(id) || airborne(this.lastFrame));
+    this.lastFrame = id;
+    if (eased && !this.reducedMotion) {
+      this.#ease('pivot', this.pivotOf(id), PIVOT_MS);
+    } else {
+      this.tweens.pivot = null;
+      this.pivot = this.pivotOf(id);
+    }
+    this.#render();
+  }
+
+  /** Eases this[key] to a value, re-rendering each frame. A newer ease on the same key wins. */
+  #ease(key, to, ms) {
+    const token = {};
+    this.tweens[key] = token;
+    const from = this[key];
+    return new Promise((resolve) => {
+      let t0 = null;
+      const tick = (now) => {
+        if (this.tweens[key] !== token) { resolve(); return; }
+        if (t0 === null) t0 = now;
+        const u = Math.min(1, (now - t0) / ms);
+        this[key] = from + (to - from) * easeInOut(u);
+        this.#render();
+        if (u < 1) requestAnimationFrame(tick);
+        else resolve();
+      };
+      requestAnimationFrame(tick);
+    });
+  }
+
+  /** Turns to face a direction (1 right, -1 left). Resolves when the turn is done. */
+  #turn(dir) {
+    this.facing = dir;
+    if (this.flip === dir) return Promise.resolve();
+    if (this.reducedMotion) { this.flip = dir; this.#render(); return Promise.resolve(); }
+    return this.#ease('flip', dir, TURN_MS);
   }
 
   /* ---- flight ---- */
@@ -204,37 +291,83 @@ export class BluebirdFlight {
   async #run() {
     this.busy = true;
     this.#setTappable(false);
-    clearTimeout(this.blinkTimer);
+    this.#setIdle(false);
     this.away = false;
     this.el.style.visibility = '';
 
     while (this.target !== this.perchedOn) {
-      this.#face(this.#pointOf(this.target).x);
-      if (this.perchedOn) await this.anim.play(SEQUENCES.takeoff);
+      const to = this.#pointOf(this.target);
+      if (this.perchedOn) await this.#launch(this.#dirTo(to.x));
+      else await this.#face(to.x);
       this.perchedOn = null;
       this.hopDx = 0;
 
+      // Long flights break up the flapping with a glide.
+      const far = Math.hypot(to.x - this.pos.x, to.y - this.pos.y) > GLIDE_OVER;
+      const beat = SEQUENCES.flightLoop;
+      const loop = far ? [...beat, ...SEQUENCES.glideBeat] : beat;
+
       const near = new Promise((resolve) => { this.nearArrival = resolve; });
       const moving = this.#move();
-      const flapping = this.anim.play(SEQUENCES.flightLoop, { loop: true });
+      const flapping = this.anim.play(loop, { loop: true });
 
       await near;
-      this.anim.requestStop();          // finish this wingbeat, don't cut it
+      this.anim.stop();                 // a bird flares abruptly: cut to the approach pose
       await flapping;
       await this.anim.play([['approach', 'approach']]);
-      const landedOn = await moving;    // holds the approach pose for any remaining glide
+      const landedOn = await moving;    // holds the flare for the rest of the glide in
 
-      await this.anim.play(SEQUENCES.landing.slice(1));
+      await this.#touchdown();
       this.perchedOn = landedOn;
       const face = landedOn.dataset.perchFace;
-      if (face) { this.facing = face === 'left' ? -1 : 1; this.#render(); }
+      const dir = face === 'left' ? -1 : 1;
+      if (face && dir !== this.facing && this.target === landedOn) {
+        await this.anim.play([[REST_FRAME, 'perch']]);   // settle for a beat before looking round
+        await this.#lookRound(dir);
+      }
     }
 
     this.busy = false;
     this.taps = 0;
     this.#snapToPerch();
     this.#setTappable(true);
-    this.#scheduleBlink();
+    this.#scheduleIdle();
+  }
+
+  /**
+   * Leaves the perch: wind up in the crouch, then spring off with a stretch that
+   * relaxes once it is flying. Turns first if it is facing the wrong way.
+   */
+  async #launch(dir) {
+    if (dir !== this.facing && this.frames.hasTurn) await this.#hop(this.#pointOf(this.perchedOn), dir);
+    this.anim.setFrame('crouch');
+    await this.#ease('squash', 0.93, this.anim.holdFor(['crouch', 'crouch']));
+    if (dir !== this.facing) this.#setFlip(dir);   // no turn art: swap under cover of the launch
+    this.anim.setFrame('wings-up');
+    this.#ease('squash', 1.09, 70).then(() => this.#ease('squash', 1, 220));
+  }
+
+  /** Lands: squash on impact, a small rebound, settle. */
+  async #touchdown() {
+    this.bob = 0;
+    this.#ease('tilt', 0, 90);
+    this.anim.setFrame('impact');
+    await this.#ease('squash', 0.87, this.anim.holdFor(['impact', 'impact']) * 0.7);
+    this.anim.setFrame('settle');
+    await this.#ease('squash', 1.04, this.anim.holdFor(['settle', 'settle']));
+    this.anim.setFrame(REST_FRAME);
+    await this.#ease('squash', 1, this.anim.holdFor(['perch', 'perch']) * 0.8);
+  }
+
+  /**
+   * What the air does to the body, called once per frame of flight: it rides up
+   * on the downstroke and sinks on the upstroke, and pitches with its path.
+   */
+  #airPose(dt, vx, vy, flare) {
+    const bobTo = (BOB[this.anim.currentFrame] ?? 0) * this.height;
+    this.bob += (bobTo - this.bob) * Math.min(1, dt / 70);
+    const pitch = flare ? FLARE : clamp(Math.atan2(vy, Math.abs(vx) + 0.15) * (180 / Math.PI) * 0.4, -12, 12);
+    this.tilt += (pitch - this.tilt) * Math.min(1, dt / 130);
   }
 
   /**
@@ -245,7 +378,7 @@ export class BluebirdFlight {
    */
   #move() {
     return new Promise((resolve) => {
-      let dest, from, t0, duration, arc;
+      let dest, from, t0, duration, arc, last;
 
       const begin = (now) => {
         dest = this.target;
@@ -256,9 +389,10 @@ export class BluebirdFlight {
         from = { x: this.pos.x, y: Math.min(Math.max(this.pos.y, top), bottom) };
         const to = this.#pointOf(dest);
         const dist = Math.hypot(to.x - from.x, to.y - from.y);
-        duration = Math.min(Math.max(dist * 1.15, 650), 1500);
-        arc = Math.min(110, dist * 0.18);
+        duration = clamp(dist * 1.35, 760, 1750);
+        arc = Math.min(120, dist * 0.2);
         t0 = now;
+        last = now;
         this.#face(to.x);
       };
 
@@ -266,14 +400,19 @@ export class BluebirdFlight {
         if (dest !== this.target) begin(now);
         const to = this.#pointOf(dest);
         const u = Math.min(1, (now - t0) / duration);
-        const e = easeInOut(u);
-        this.pos = {
+        const e = easeFlight(u);
+        const next = {
           x: from.x + (to.x - from.x) * e,
-          y: from.y + (to.y - from.y) * e - Math.sin(Math.PI * u) * arc,
+          // The arc peaks early: climb out quickly, then glide down onto the perch.
+          y: from.y + (to.y - from.y) * e - Math.sin(Math.PI * u ** 0.7) * arc,
         };
+        const dt = Math.max(1, now - last);
+        this.#airPose(dt, (next.x - this.pos.x) / dt, (next.y - this.pos.y) / dt, u >= 0.72);
+        last = now;
+        this.pos = next;
         this.#render();
 
-        if (u >= 0.7 && this.nearArrival) {
+        if (u >= 0.72 && this.nearArrival) {
           this.nearArrival();
           this.nearArrival = null;
         }
@@ -301,19 +440,29 @@ export class BluebirdFlight {
     else this.#flyAway();
   };
 
-  /** Moves the feet point to `to` along a small arc. Used by hops and the exit. */
-  #tween(to, duration, arc) {
+  /**
+   * Moves the feet point to `to` along a small arc. Used by hops, and by the
+   * exit with `flying` set: that accelerates away and gets the in-air body pose.
+   */
+  #tween(to, duration, arc, flying = false) {
     return new Promise((resolve) => {
       const from = { ...this.pos };
       let t0 = null;
+      let last = null;
       const tick = (now) => {
-        if (t0 === null) t0 = now;
+        if (t0 === null) { t0 = now; last = now; }
         const u = Math.min(1, (now - t0) / duration);
-        const e = easeInOut(u);
-        this.pos = {
+        const e = flying ? u ** 1.7 : easeInOut(u);
+        const next = {
           x: from.x + (to.x - from.x) * e,
           y: from.y + (to.y - from.y) * e - Math.sin(Math.PI * u) * arc,
         };
+        if (flying) {
+          const dt = Math.max(1, now - last);
+          this.#airPose(dt, (next.x - this.pos.x) / dt, (next.y - this.pos.y) / dt, false);
+          last = now;
+        }
+        this.pos = next;
         this.#render();
         if (u < 1) requestAnimationFrame(tick);
         else resolve();
@@ -322,11 +471,11 @@ export class BluebirdFlight {
     });
   }
 
-  /** A few short hops along the perch, turning to face each one. */
+  /** A few hops along the perch, each a different size, with a beat between them. */
   async #hopAround() {
     this.busy = true;
     this.hopping = true;
-    clearTimeout(this.blinkTimer);
+    this.#setIdle(false);
 
     const perch = this.perchedOn;
     const inset = this.height * 0.3;
@@ -336,18 +485,15 @@ export class BluebirdFlight {
       const r = perch.getBoundingClientRect();
       const min = r.left + window.scrollX + inset;
       const max = r.right + window.scrollX - inset;
-      let step = (0.35 + Math.random() * 0.3) * this.height * (Math.random() < 0.5 ? -1 : 1);
+      // Mostly carry on the way it is facing; a reversal is a spin, and one is plenty.
+      let step = (0.35 + Math.random() * 0.3) * this.height * (Math.random() < 0.75 ? this.facing : -this.facing);
       if (this.pos.x + step < min || this.pos.x + step > max) step = -step;
       if (this.pos.x + step < min || this.pos.x + step > max) step = 0;
 
-      if (step) { this.facing = step > 0 ? 1 : -1; this.#render(); }
-      await this.anim.play([['crouch', 'crouch']]);
       this.hopDx += step;
-      await Promise.all([
-        this.#tween(this.#pointOf(perch), 260, this.height * 0.22),
-        this.anim.play([['wings-up', 'launch'], ['approach', 'approach']]),
-      ]);
-      await this.anim.play([['impact', 'impact'], [REST_FRAME, 'settle']]);
+      const dir = step ? (step > 0 ? 1 : -1) : this.facing;
+      await this.#hop(this.#pointOf(perch), dir, 0.15 + Math.random() * 0.13);
+      if (i < 2) await this.#wait(70 + Math.random() * 170);
     }
 
     this.hopping = false;
@@ -355,7 +501,7 @@ export class BluebirdFlight {
     if (this.leaveAfterHop) { this.leaveAfterHop = false; this.#flyAway(); return; }
     if (this.target !== this.perchedOn) { this.#run(); return; }   // page scrolled mid-hop
     this.#snapToPerch();
-    this.#scheduleBlink();
+    this.#scheduleIdle();
   }
 
   /** Takes off and leaves the screen, up and out the way it is facing. */
@@ -363,10 +509,10 @@ export class BluebirdFlight {
     this.busy = true;
     this.away = true;
     this.#setTappable(false);
-    clearTimeout(this.blinkTimer);
+    this.#setIdle(false);
 
     this.target = null;             // a scroll from here on picks the perch to return to
-    await this.anim.play(SEQUENCES.takeoff);
+    await this.#launch(this.facing);
     this.perchedOn = null;
     this.hopDx = 0;
 
@@ -377,9 +523,11 @@ export class BluebirdFlight {
     };
     const dist = Math.hypot(exit.x - this.pos.x, exit.y - this.pos.y);
     const flapping = this.anim.play(SEQUENCES.flightLoop, { loop: true });
-    await this.#tween(exit, Math.min(Math.max(dist * 1.1, 700), 1400), 0);
+    await this.#tween(exit, clamp(dist * 1.1, 700, 1400), 0, true);
     this.anim.stop();
     await flapping;
+    this.tilt = 0;
+    this.bob = 0;
 
     this.el.style.visibility = 'hidden';
     this.busy = false;
@@ -387,19 +535,121 @@ export class BluebirdFlight {
     if (this.target) this.#run();
   }
 
-  #face(x) {
-    if (Math.abs(x - this.pos.x) > 4) this.facing = x > this.pos.x ? 1 : -1;
+  /** Mirrors the sprite at once. Only ever called under cover of a pose change. */
+  #setFlip(dir) {
+    this.tweens.flip = null;
+    this.facing = dir;
+    this.flip = dir;
+    this.#render();
   }
 
-  #scheduleBlink() {
-    clearTimeout(this.blinkTimer);
-    this.blinkTimer = setTimeout(async () => {
+  /**
+   * Turns round while standing on a perch. With turn-around art it is a real
+   * turn: out to the head-on frame, mirror there (that frame is symmetrical),
+   * and back in. Without it, a small hop on the spot with the swap at lift-off.
+   */
+  async #lookRound(dir) {
+    if (dir === this.facing) return;
+    if (this.frames.hasTurn) {
+      await this.#hop({ ...this.pos }, dir);
+      return;
+    }
+    await this.anim.play([['crouch', 'crouch']]);
+    this.#setFlip(dir);
+    await Promise.all([
+      this.#tween({ ...this.pos }, 260, this.height * 0.22),
+      this.anim.play([['wings-up', 'launch'], ['approach', 'approach']]),
+    ]);
+    await this.anim.play([['impact', 'impact'], [REST_FRAME, 'settle']]);
+  }
+
+  /**
+   * One hop to `to` (which may be where it already is), ending up facing `dir`.
+   * Dip, spring up with a stretch, land with a squash, recover. It hops the way
+   * a sparrow does, on its legs, so there are no wing frames in it.
+   *
+   * A hop that reverses direction spins in the air using the turn art. A bird
+   * does not rotate on the spot: turning at constant speed on planted feet is
+   * what makes a turn look like a figurine on a turntable.
+   */
+  async #hop(to, dir, lift = 0.2) {
+    const hold = (steps) => steps.reduce((ms, step) => ms + this.anim.holdFor(step), 0);
+    const spin = dir !== this.facing && this.frames.hasTurn;
+    const airMs = spin ? hold(SEQUENCES.turnOut) + hold(SEQUENCES.turnIn) : 190;
+
+    this.anim.setFrame('idle');
+    await this.#ease('squash', 0.9, 90);                         // dip: anticipation
+    if (dir !== this.facing && !spin) this.#setFlip(dir);        // no turn art: swap at lift-off
+
+    await Promise.all([
+      this.#tween(to, airMs, this.height * lift),
+      this.#ease('squash', 1.07, airMs * 0.45),                  // stretch on the way up
+      spin && (async () => {
+        await this.anim.play(SEQUENCES.turnOut);
+        this.#setFlip(dir);                                      // on the head-on frame
+        await this.anim.play(SEQUENCES.turnIn);
+      })(),
+    ]);
+
+    this.anim.setFrame('idle');
+    await this.#ease('squash', 0.86, 70);                        // land: squash
+    await this.#ease('squash', 1, 150);                          // recover
+    this.anim.setFrame(REST_FRAME);
+  }
+
+  #wait(ms) {
+    return new Promise((resolve) => { setTimeout(resolve, ms); });
+  }
+
+  #dirTo(x) {
+    return Math.abs(x - this.pos.x) <= 4 ? this.facing : (x > this.pos.x ? 1 : -1);
+  }
+
+  /** Banks toward a point in the air, unless it is more or less straight above or below. */
+  #face(x) {
+    return this.#turn(this.#dirTo(x));
+  }
+
+  /** Breathing is a CSS animation on the sprite; it only runs while this is set. */
+  #setIdle(on) {
+    this.el.classList.toggle('is-idle', on);
+    if (!on) clearTimeout(this.idleTimer);
+  }
+
+  /**
+   * Life on the perch. Every few seconds: a blink, sometimes two, and now and
+   * then a glance round at the viewer. Anything that needs the bird (a flight,
+   * a tap) interrupts it, and each step checks before carrying on.
+   */
+  #scheduleIdle() {
+    this.#setIdle(true);
+    clearTimeout(this.idleTimer);
+    this.idleTimer = setTimeout(async () => {
       if (this.busy) return;
-      const result = await this.anim.play(SEQUENCES.blink);
-      if (result === 'complete' && !this.busy) {
+      const roll = Math.random();
+      const done = roll < 0.25 && this.frames.hasTurn ? await this.#glance()
+        : await this.#blink(roll > 0.85 ? 2 : 1);
+      if (done && !this.busy) {
         this.anim.setFrame(REST_FRAME);
-        this.#scheduleBlink();
+        this.#scheduleIdle();
       }
-    }, 2500 + Math.random() * 3500);
+    }, 2200 + Math.random() * 3600);
+  }
+
+  async #blink(times) {
+    for (let i = 0; i < times; i += 1) {
+      if (await this.anim.play(SEQUENCES.blink) !== 'complete' || this.busy) return false;
+    }
+    return true;
+  }
+
+  /** Looks round toward the viewer, holds it, looks back. */
+  async #glance() {
+    const out = [['turn-30', 'turn'], ['turn-60', 'turn']];
+    if (await this.anim.play([['idle', 'turn'], ...out]) !== 'complete' || this.busy) return false;
+    await this.#wait(550 + Math.random() * 650);
+    // A flight may have started during the hold; it owns the frames now.
+    if (this.busy || this.anim.currentFrame !== 'turn-60') return false;
+    return await this.anim.play([['turn-30', 'turn'], ['idle', 'turn']]) === 'complete' && !this.busy;
   }
 }

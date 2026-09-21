@@ -77,6 +77,7 @@
       <button data-seq="flight" id="flightBtn">Flight loop</button>
       <button data-seq="landing">Landing</button>
       <button data-seq="full">Full sequence</button>
+      <button data-seq="turn">Turn round</button>
     </div>
     <div id="status">&mdash;</div>
 
@@ -107,7 +108,7 @@
   </div>
 
 <script type="module">
-import { loadFrames, DEFAULT_TIMING, SEQUENCES, REST_FRAME, buildFullSequence, FRAME_IDS }
+import { loadFrames, DEFAULT_TIMING, SEQUENCES, REST_FRAME, buildFullSequence, FRAME_IDS, OPTIONAL_FRAME_IDS }
   from './src/bluebirdFrames.js';
 import { BluebirdAnimator } from './src/BluebirdAnimator.js';
 
@@ -119,7 +120,7 @@ const perchLine = document.getElementById('perchLine');
 const anchorDot = document.getElementById('anchorDot');
 
 const timing = { ...DEFAULT_TIMING };
-let frames, anim, flying = false, landRequested = false;
+let frames, anim, flying = false, landRequested = false, mirrored = false;
 
 const systemReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -155,7 +156,8 @@ async function init(){
     FRAME_IDS.map(function(id){ return '<img src="' + frames.srcOf(id) + '" alt="">'; }).join('');
 
   const fb = document.getElementById('frameBtns');
-  fb.innerHTML = FRAME_IDS.map(function(id){
+  const stepIds = FRAME_IDS.concat(OPTIONAL_FRAME_IDS.filter(function(id){ return frames.images[id]; }));
+  fb.innerHTML = stepIds.map(function(id){
     return '<button data-frame="' + id + '">' + id + '</button>';
   }).join('');
   fb.onclick = function(e){
@@ -237,6 +239,19 @@ document.getElementById('seqRow').onclick = async function(e){
   if (seq === 'blink'){ say('blink'); await anim.play(SEQUENCES.blink); say('perched'); return; }
   if (seq === 'takeoff'){ say('takeoff'); await anim.play(SEQUENCES.takeoff); say('airborne (held)'); return; }
   if (seq === 'landing'){ say('landing'); await anim.play(SEQUENCES.landing); say('perched'); return; }
+  if (seq === 'turn'){
+    if (!frames.hasTurn){ say('no turn frames - run tools/build_turn_frames.py'); return; }
+    say('turning');
+    await anim.play(SEQUENCES.turnOut);
+    // Mirror on the head-on frame, about the feet, exactly as the site does.
+    const front = frames.registration.frames['turn-front'];
+    mirrored = !mirrored;
+    birdEl.style.transformOrigin = (front.pivotX / frames.registration.canvas.width * 100) + '% 50%';
+    birdEl.style.transform = mirrored ? 'scaleX(-1)' : '';
+    await anim.play(SEQUENCES.turnIn.concat([[REST_FRAME, 'perch']]));
+    say('perched, facing ' + (mirrored ? 'left' : 'right'));
+    return;
+  }
   if (seq === 'full'){
     say('full sequence: takeoff -> 4 wingbeats + glide -> landing');
     await anim.play(buildFullSequence(4, 3));

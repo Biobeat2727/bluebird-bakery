@@ -17,7 +17,8 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 352.5
     },
     "blink": {
       "file": "blink.webp",
@@ -27,7 +28,8 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 347.5
     },
     "crouch": {
       "file": "crouch.webp",
@@ -37,7 +39,8 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 265.3
     },
     "wings-up": {
       "file": "wings-up.webp",
@@ -47,7 +50,8 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 274.7
     },
     "wings-mid": {
       "file": "wings-mid.webp",
@@ -57,7 +61,8 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 269.1
     },
     "wings-down": {
       "file": "wings-down.webp",
@@ -67,7 +72,8 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 254.4
     },
     "glide": {
       "file": "glide.webp",
@@ -77,7 +83,8 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 263.6
     },
     "approach": {
       "file": "approach.webp",
@@ -87,7 +94,8 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 323.0
     },
     "impact": {
       "file": "impact.webp",
@@ -97,7 +105,8 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 297.9
     },
     "settle": {
       "file": "settle.webp",
@@ -107,7 +116,8 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 258.7
     },
     "perch": {
       "file": "perch.webp",
@@ -117,7 +127,42 @@
       "nudge": {
         "x": 0,
         "y": 0
-      }
+      },
+      "pivotX": 351.9
+    },
+    "turn-30": {
+      "file": "turn-30.webp",
+      "source": "turn-renders/02-turn-30deg.png",
+      "sourceScale": 0.7722,
+      "footOffsetY": 218.8,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      },
+      "pivotX": 361.9
+    },
+    "turn-60": {
+      "file": "turn-60.webp",
+      "source": "turn-renders/03-turn-60deg.png",
+      "sourceScale": 0.7722,
+      "footOffsetY": 218.8,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      },
+      "pivotX": 358.3
+    },
+    "turn-front": {
+      "file": "turn-front.webp",
+      "source": "turn-renders/04-turn-front.png",
+      "sourceScale": 0.7722,
+      "footOffsetY": 220.8,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      },
+      "pivotX": 356.8
     }
-  }
+  },
+  "pivotNote": "pivotX: feet centre for grounded frames, centre of mass for airborne ones; written by tools/measure_pivots.py"
 }
