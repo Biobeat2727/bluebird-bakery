@@ -120,7 +120,8 @@ Agricultural Center (apples), Thunder's Catch (smoked salmon), Upside Kombucha (
 ## Photos
 
 Pulled from the current site on 2026-09-20. Full-size originals are in `photos/original/`
-(some are 4000x6000), web copies capped at 2000px are in `photos/`. File names on the old site
+(some are 4000x6000). `python tools/build_photos.py` turns them into the WebP sizes and JPEG
+fallbacks in `photos/`; add a new original to the PHOTOS map in that script and rerun. File names on the old site
 credit two shoots: "Racheal_Baker_Bluebird" and "BLUEBIRD-JAN2023". Confirm the bakery has the
 rights to reuse them on a new site, and ask for the rest of both shoots.
 

@@ -7,10 +7,14 @@
 <meta name="description" content="Bread and pastry baked every morning at 329 N First Ave, Sandpoint. Full kitchen menu and Doma coffee. Open daily 8 to 3.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300&family=Bodoni+Moda:opsz,wght@6..96,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<!-- Bodoni sets one word, so only those letters are fetched. -->
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400&text=BLUEBIRD&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+<a class="skip" href="#top">Skip to content</a>
 
 <p class="utility"><span id="openStatus">Open daily 8 to 3</span> &middot; 329 N First Ave, Sandpoint</p>
 
@@ -28,24 +32,25 @@
 <main id="top">
 
   <section class="hero">
-    <figure><img src="photos/rack-loaves.jpg" alt="Sourdough loaves cooling on a wire rack in the bakery"></figure>
-    <figure><img src="photos/croissant-latte.jpg" alt="A croissant cut in half to show the layers, next to a latte"></figure>
+    <figure><img src="photos/rack-loaves.jpg" srcset="photos/rack-loaves-640.webp 640w, photos/rack-loaves-1024.webp 1024w" sizes="(max-width: 800px) 100vw, 50vw" width="1024" height="683" alt="Sourdough loaves cooling on a wire rack in the bakery" fetchpriority="high"></figure>
+    <figure><img src="photos/croissant-latte.jpg" srcset="photos/croissant-latte-640.webp 640w, photos/croissant-latte-1200.webp 1200w, photos/croissant-latte-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 50vw" width="1200" height="812" alt="A croissant cut in half to show the layers, next to a latte" fetchpriority="high"></figure>
     <div class="hero-over">
       <h1>Baked every morning</h1>
-      <a class="btn" href="#bake" data-perch data-perch-at="0.5" data-perch-face="right">See today's bread</a>
+      <a class="btn" href="#schedule" data-perch data-perch-at="0.5" data-perch-face="right">See today's bread</a>
     </div>
   </section>
 
   <section class="statement wrap">
     <p class="label">The bakery</p>
-    <p>Jill Severson opened Bluebird in October 2019. The flour is stone ground at two Washington mills, and most of the produce comes from farms around Sandpoint. The daily bake is out of the oven within an hour and a half of opening.</p>
+    <p>Jill Severson opened Bluebird in October 2019. The flour is stone ground at two Washington mills, and the produce comes from farms like Pack River and Mountain Cloud. The daily bake is out of the oven within an hour and a half of opening.</p>
   </section>
 
   <!-- ---- bread and pastry ---- -->
-  <section id="bake">
+  <section id="bake" aria-labelledby="bake-title">
+    <h2 class="sr" id="bake-title">Bread and pastry</h2>
     <div class="pair" data-perch data-perch-at="0.5" data-perch-face="right">
       <div class="pair-item">
-        <figure class="pair-photo"><img src="photos/oven-loaves.jpg" alt="Loaves being pulled from the deck oven on a peel" loading="lazy"><span class="btn">Bread</span></figure>
+        <figure class="pair-photo has-title"><img src="photos/oven-loaves.jpg" srcset="photos/oven-loaves-640.webp 640w, photos/oven-loaves-1024.webp 1024w" sizes="(max-width: 800px) 100vw, 50vw" width="1024" height="683" alt="Loaves being pulled from the deck oven on a peel" loading="lazy" decoding="async"><h3 class="pair-title">Bread</h3></figure>
         <div class="pair-body">
           <p class="note">Loaf $10. Baguette $5. Baked every day:</p>
           <dl data-perch data-perch-at="0.2" data-perch-face="right">
@@ -59,7 +64,7 @@
         </div>
       </div>
       <div class="pair-item">
-        <figure class="pair-photo"><img src="photos/croissant-cruffin.jpg" alt="A croissant cut open beside a cruffin topped with chocolate" loading="lazy"><span class="btn">Pastry</span></figure>
+        <figure class="pair-photo has-title"><img src="photos/croissant-cruffin.jpg" srcset="photos/croissant-cruffin-640.webp 640w, photos/croissant-cruffin-1200.webp 1200w, photos/croissant-cruffin-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 50vw" width="1200" height="747" alt="A croissant cut open beside a cruffin topped with chocolate" loading="lazy" decoding="async"><h3 class="pair-title">Pastry</h3></figure>
         <div class="pair-body">
           <dl data-perch data-perch-at="0.8" data-perch-face="left">
             <div><dt>Plain croissant</dt><dd>$3.75</dd></div>
@@ -101,8 +106,8 @@
   <!-- ---- kitchen ---- -->
   <section id="kitchen">
     <div class="pair pair-short" data-perch data-perch-at="0.5" data-perch-face="left">
-      <figure class="pair-photo"><img src="photos/avocado-toast.jpg" alt="Avocado toast piled with shaved vegetables and pea shoots" loading="lazy"></figure>
-      <figure class="pair-photo"><img src="photos/croissant-sando.jpg" alt="Turkey and avocado on an everything croissant, with a cappuccino" loading="lazy"></figure>
+      <figure class="pair-photo"><img src="photos/avocado-toast.jpg" srcset="photos/avocado-toast-640.webp 640w, photos/avocado-toast-1200.webp 1200w, photos/avocado-toast-1602.webp 1602w" sizes="(max-width: 800px) 100vw, 50vw" width="1200" height="565" alt="Avocado toast piled with shaved vegetables and pea shoots" loading="lazy" decoding="async"></figure>
+      <figure class="pair-photo"><img src="photos/croissant-sando.jpg" srcset="photos/croissant-sando-640.webp 640w, photos/croissant-sando-1200.webp 1200w, photos/croissant-sando-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 50vw" width="1200" height="1200" alt="Turkey and avocado on an everything croissant, with a cappuccino" loading="lazy" decoding="async"></figure>
     </div>
     <div class="wrap kitchen">
       <div class="section-head">
@@ -116,7 +121,7 @@
         <article><h3>Simple breakfast <span>$9</span></h3><p>Scrambled eggs, green onion, toast and jam.</p></article>
         <article><h3>Croissant breakfast sando <span>$17</span></h3><p>Scrambled eggs, cheddar and green onion with bacon, ham, or avocado and Mama Lil's. Egg and cheese only, $15.</p></article>
         <article><h3>Breakfast ciabatta <span>$18</span></h3><p>Scrambled egg with cheddar, green onion, ham, bacon, avocado, Calabrian chili aioli.</p></article>
-        <article><h3>Turkey avo croissant <span>$17</span></h3><p>Turkey, avo, mayo, cheddar, lettuce and tomato.</p></article>
+        <article data-perch data-perch-at="0.85" data-perch-face="left"><h3>Turkey avo croissant <span>$17</span></h3><p>Turkey, avo, mayo, cheddar, lettuce and tomato.</p></article>
         <article><h3>The veg ciabatta <span>$16</span></h3><p>Za'atar goat cheese, roasted beets, avo, cucumber, Mama Lil's pickled peppers, pea shoots.</p></article>
         <article><h3>Kickin' chicken <span>$14</span></h3><p>Spicy chicken and pepperjack, warmed, with chipotle aioli, tomato and red onion on telera.</p></article>
         <article><h3>House sando <span>$15</span></h3><p>Your bread (baguette, ciabatta, telera, brioche or daily sliced) and your meat (ham, turkey or spicy chicken). Mayo, Fat Pig mustard, cheddar, lettuce, tomato.</p></article>
@@ -144,7 +149,7 @@
             <tr><th scope="row">London fog</th><td>4.00</td><td>4.50</td><td>5.00</td></tr>
           </tbody>
         </table>
-        <dl class="short">
+        <dl class="short" data-perch data-perch-at="0.3" data-perch-face="right">
           <div><dt>Espresso</dt><dd>2.75</dd></div>
           <div><dt>Macchiato, 3oz</dt><dd>3.50</dd></div>
           <div><dt>Cortado, 5oz</dt><dd>4.00</dd></div>
@@ -153,7 +158,7 @@
         </dl>
       </div>
       <div>
-        <figure class="coffee-photo" data-perch data-perch-at="0.78" data-perch-face="left"><img src="photos/latte-doma.jpg" alt="A latte with rosetta art beside a bag of Doma coffee" loading="lazy"></figure>
+        <figure class="coffee-photo" data-perch data-perch-at="0.78" data-perch-face="left"><img src="photos/latte-doma.jpg" srcset="photos/latte-doma-640.webp 640w, photos/latte-doma-1200.webp 1200w, photos/latte-doma-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 40vw" width="1200" height="675" alt="A latte with rosetta art beside a bag of Doma coffee" loading="lazy" decoding="async"></figure>
         <p class="label">Add .75</p>
         <p class="note">House-made syrups: vanilla, caramel, chocolate, white chocolate, lavender, hazelnut and a seasonal one. Coconut, oat or almond milk. An extra shot.</p>
         <p class="label">Rishi teas</p>
@@ -173,7 +178,7 @@
       <p>Jill grew up in Thousand Oaks, California. She studied pastry at The French Culinary Institute and bread at the International Culinary Center in New York, and worked at Jacques Torres Chocolate while she was in school. Then came more than a decade in Seattle at Mistral Kitchen, The Essential Baking Company and The Fairmont Olympic Hotel, and a stint as pastry chef at Majestic Valley Wilderness Lodge, a heli-ski lodge in Glacier View, Alaska.</p>
       <p>She moved to Sandpoint for a smaller town and more time outside. When she's not at the bakery she's snowboarding, out on a boat or camping.</p>
     </div>
-    <figure class="story-photo" data-perch data-perch-at="0.25" data-perch-face="right"><img src="photos/rolling-chocolate.jpg" alt="A baker's hands rolling a chocolate croissant on the bench" loading="lazy"></figure>
+    <figure class="story-photo" data-perch data-perch-at="0.25" data-perch-face="right"><img src="photos/rolling-chocolate.jpg" srcset="photos/rolling-chocolate-640.webp 640w, photos/rolling-chocolate-1200.webp 1200w, photos/rolling-chocolate-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 40vw" width="1200" height="1800" alt="A baker's hands rolling a chocolate croissant on the bench" loading="lazy" decoding="async"></figure>
   </section>
 
   <section id="partners" class="wrap partners">
@@ -212,11 +217,34 @@
     <div class="message">
       <p class="label">Get in touch</p>
       <h2 data-perch data-perch-at="0.97" data-perch-dy="8" data-perch-face="left">Send a message</h2>
-      <!-- TODO: not connected to anything yet. Needs a form endpoint or the bakery's email. -->
-      <form id="contactForm" novalidate>
-        <label>Name<input type="text" name="name" autocomplete="name" required></label>
-        <label>Email<input type="email" name="email" autocomplete="email" required></label>
-        <label>Message<textarea name="message" rows="4" required></textarea></label>
+
+      <!-- Shown until the form has somewhere to send to. -->
+      <div id="contactFallback">
+        <p>The quickest way to reach us is by phone, or stop in any day between 8 and 3.</p>
+        <p><a class="btn btn-dark" href="tel:+12082658730">Call (208) 265-8730</a></p>
+        <p class="note">We're on <a href="https://www.instagram.com/bluebirdbakeryid/">Instagram</a> and <a href="https://www.facebook.com/bluebirdbakeryid/">Facebook</a> too.</p>
+      </div>
+
+      <!-- To switch the form on, put a form endpoint URL (Formspree, Basin, Netlify
+           or similar, accepting a JSON POST) in data-endpoint. today.js does the rest. -->
+      <form id="contactForm" data-endpoint="" novalidate hidden>
+        <div class="field">
+          <label for="cf-name">Name</label>
+          <input id="cf-name" type="text" name="name" autocomplete="name" maxlength="120" required aria-describedby="cf-name-err">
+          <p class="field-error" id="cf-name-err" hidden>Add your name.</p>
+        </div>
+        <div class="field">
+          <label for="cf-email">Email</label>
+          <input id="cf-email" type="email" name="email" autocomplete="email" maxlength="200" inputmode="email" required aria-describedby="cf-email-err">
+          <p class="field-error" id="cf-email-err" hidden>That email doesn't look right. Check it for a typo.</p>
+        </div>
+        <div class="field">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" rows="4" maxlength="4000" required aria-describedby="cf-message-err"></textarea>
+          <p class="field-error" id="cf-message-err" hidden>Write a message first.</p>
+        </div>
+        <!-- Honeypot: people never see or fill this; bots do. -->
+        <div class="sr" aria-hidden="true"><label for="cf-website">Leave this empty</label><input id="cf-website" type="text" name="website" tabindex="-1" autocomplete="off"></div>
         <button class="btn btn-dark" type="submit">Send message</button>
         <p class="note" id="formNote" role="status">We reply by email. Check your junk folder if you don't see it.</p>
       </form>
@@ -231,16 +259,16 @@
         <p class="label">Hours</p>
         <dl>
           <div><dt>Every day</dt><dd>8 to 3</dd></div>
-          <div><dt>Kitchen menu</dt><dd>8 to 3</dd></div>
-          <div><dt>Fresh bake out by</dt><dd>9:30</dd></div>
+          <div><dt>Kitchen</dt><dd>All day</dd></div>
         </dl>
+        <p class="note hours-note">The daily bake is out of the oven within an hour and a half of opening.</p>
       </div>
       <div>
         <p class="label">Find us</p>
         <address>329 N First Ave<br>Sandpoint, ID 83864<br><a href="tel:+12082658730">(208) 265-8730</a></address>
         <a class="btn btn-dark" href="https://www.google.com/maps/search/?api=1&query=Bluebird+Bakery+329+N+First+Ave+Sandpoint+ID">Directions</a>
       </div>
-      <figure class="visit-photo" data-perch data-perch-at="0.7" data-perch-face="left"><img src="photos/shaping-croissants.jpg" alt="Croissants being shaped by hand on a long wooden bench" loading="lazy"></figure>
+      <figure class="visit-photo" data-perch data-perch-at="0.7" data-perch-face="left"><img src="photos/shaping-croissants.jpg" srcset="photos/shaping-croissants-640.webp 640w, photos/shaping-croissants-1200.webp 1200w, photos/shaping-croissants-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 40vw" width="1200" height="1800" alt="Croissants being shaped by hand on a long wooden bench" loading="lazy" decoding="async"></figure>
     </div>
   </section>
 

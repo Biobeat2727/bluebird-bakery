@@ -17,6 +17,12 @@
   --pale: #f3f3f1;
   --grey: #6b6b6b;
   --line: #d8d8d4;
+  /* on the near-black panels and over photographs */
+  --on-dark: #d6d6d6;
+  --on-dark-quiet: #a8a8a8;
+  --on-dark-line: #777777;
+  --scrim: rgba(20, 16, 12, 0.4);
+  --error: #8f1d14;
 
   --logo: "Bodoni Moda", "Didot", serif;
   --label: "Jost", "Futura", sans-serif;
@@ -48,6 +54,9 @@ p { margin: 0 0 1em; max-width: 36em; }
 .order :focus-visible, .footer :focus-visible { outline-color: var(--white); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 
+.skip { position: absolute; left: 0.5rem; top: -4rem; z-index: 100; background: var(--black); color: var(--white); padding: 0.9rem 1.25rem; font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; }
+.skip:focus { top: 0.5rem; }
+
 .wrap { max-width: 80rem; margin-inline: auto; padding-inline: var(--gutter); }
 
 h1, h2 { font-family: var(--display); font-weight: 300; text-transform: uppercase; margin: 0; line-height: 0.95; }
@@ -65,9 +74,11 @@ h3 { font: 400 var(--t-h3)/1.3 var(--label); margin: 0; }
   font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;
   padding: 1.05rem 2rem; border: 1px solid var(--white);
 }
-a.btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
 .btn-dark { background: var(--black); color: var(--white); border-color: var(--black); }
-a.btn-dark:hover, button.btn-dark:hover { background: var(--white); color: var(--black); }
+@media (hover: hover) {
+  a.btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+  a.btn-dark:hover, button.btn-dark:hover:not(:disabled) { background: var(--white); color: var(--black); }
+}
 
 /* price lists */
 dl > div { display: flex; justify-content: space-between; gap: 1.5rem; padding-block: 0.9rem; border-bottom: 1px solid var(--line); font-size: var(--t-small); }
@@ -82,15 +93,15 @@ dd { color: var(--grey); white-space: nowrap; font-variant-numeric: tabular-nums
 .wordmark { display: inline-block; text-decoration: none; margin: 0; max-width: none; }
 .wordmark span { display: inline-block; font: 400 clamp(2.75rem, 6vw, 4rem)/1 var(--logo); letter-spacing: 0.04em; text-transform: uppercase; }
 .wordmark small { display: block; font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.62em; text-indent: 0.62em; text-transform: uppercase; margin-top: 0.9rem; }
-.header nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.25rem 2.75rem; margin-top: 2.5rem; padding-bottom: 1.4rem; }
-.header nav a { font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; padding-block: 0.6rem; border-bottom: 1px solid transparent; }
+.header nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 2.75rem; margin-top: 2rem; padding-bottom: 1rem; }
+.header nav a { font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; padding-block: 1rem; border-bottom: 1px solid transparent; }
 .header nav a:hover { border-bottom-color: var(--black); }
 
 /* ---- hero ---- */
 .hero { position: relative; display: grid; grid-template-columns: 1fr 1fr; }
 .hero figure { position: relative; height: min(84vh, 52rem); min-height: 28rem; }
 /* White display type needs a consistent ground whatever the photo is. */
-.hero figure::after { content: ""; position: absolute; inset: 0; background: rgba(20, 16, 12, 0.4); }
+.hero figure::after, .has-title::after { content: ""; position: absolute; inset: 0; background: var(--scrim); }
 .hero-over { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem; text-align: center; padding: var(--gutter); }
 /* One line, spanning the seam. */
 h1 { font-size: clamp(3.75rem, 11vw, 13rem); letter-spacing: 0.02em; color: var(--white); white-space: nowrap; }
@@ -103,7 +114,9 @@ h1 { font-size: clamp(3.75rem, 11vw, 13rem); letter-spacing: 0.02em; color: var(
 .pair { display: grid; grid-template-columns: 1fr 1fr; }
 .pair-photo { position: relative; height: min(70vh, 44rem); min-height: 22rem; }
 .pair-short .pair-photo { height: min(56vh, 34rem); }
-.pair-photo .btn { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+/* The category name, set in the display face over its photograph. */
+.pair-title { position: absolute; z-index: 1; inset: 0; display: grid; place-items: center; margin: 0;
+  font: 300 clamp(3rem, 6.5vw, 6rem)/0.95 var(--display); letter-spacing: 0.04em; text-transform: uppercase; color: var(--white); }
 .pair-body { padding: 2.5rem var(--gutter) var(--space); }
 .pair-body .note { margin-block: 0 1.25rem; }
 .pair-body dl + .note { margin-block: 1.5rem 0; }
@@ -118,7 +131,7 @@ h1 { font-size: clamp(3.75rem, 11vw, 13rem); letter-spacing: 0.02em; color: var(
 .week .quiet { color: var(--grey); }
 /* Today is the one inverted cell on the page. */
 .week .today { background: var(--black); color: var(--white); padding-left: 1rem; border-color: var(--black); }
-.week .today .label, .week .today .quiet { color: #bdbdbd; }
+.week .today .label, .week .today .quiet { color: var(--on-dark-quiet); }
 
 /* ---- kitchen ---- */
 .kitchen { padding-block: var(--space); }
@@ -153,31 +166,38 @@ td { color: var(--grey); }
 /* ---- special orders + message ---- */
 .order, .message { padding: var(--space) var(--gutter); }
 .order { background: var(--black); color: var(--white); }
-.order .label { color: #a5a5a5; }
-.order p { color: #d6d6d6; }
+.order .label { color: var(--on-dark-quiet); }
+.order p { color: var(--on-dark); }
 .contact { margin-top: 2rem; font: 300 clamp(2rem, 3.4vw, 2.75rem)/1.1 var(--display); letter-spacing: 0.03em; }
-.contact a { color: var(--white); text-decoration: none; border-bottom: 1px solid #777; padding-bottom: 0.2rem; }
+.contact a { display: inline-block; color: var(--white); text-decoration: none; border-bottom: 1px solid var(--on-dark-line); padding-block: 0.35rem 0.3rem; }
 .contact a:hover { border-bottom-color: var(--white); }
 .message { background: var(--pale); }
 form { display: grid; gap: 1.75rem; max-width: 32rem; }
-label { display: grid; gap: 0.5rem; font: 500 var(--t-label)/1.4 var(--label); letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); }
-input, textarea { font: 300 var(--t-small)/1.5 var(--label); color: var(--black); background: transparent; border: 0; border-bottom: 1px solid var(--black); border-radius: 0; padding: 0.5rem 0; resize: vertical; }
-input:focus-visible, textarea:focus-visible { outline: 0; border-bottom-width: 2px; }
+.field { display: grid; gap: 0.5rem; }
+label { font: 500 var(--t-label)/1.4 var(--label); letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); }
+input, textarea { width: 100%; min-height: 2.75rem; font: 300 var(--t-small)/1.5 var(--label); color: var(--black); background: transparent; border: 0; border-bottom: 1px solid var(--black); border-radius: 0; padding: 0.5rem 0; resize: vertical; }
+input:focus-visible, textarea:focus-visible { outline: 0; box-shadow: 0 1px 0 0 var(--black); }
+[aria-invalid="true"] { border-bottom-color: var(--error); }
+.field-error { margin: 0; font-size: 0.9375rem; color: var(--error); }
 form .btn { justify-self: start; }
-form .note { margin: 0; }
+form .btn:disabled { opacity: 0.55; cursor: default; }
+form .note { margin: 0; min-height: 1.6em; }
+#contactFallback .btn { margin-block: 0.5rem 1rem; }
+.message .note a { color: var(--black); }
 
 /* ---- visit ---- */
 .visit { padding-block: var(--space); }
 .visit-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 5fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
 .visit address { margin-bottom: 2rem; }
-.visit address a { text-decoration: none; }
+.hours-note { margin-top: 1.5rem; }
+.visit address a { display: inline-block; padding-block: 0.55rem; text-decoration: none; }
 .visit-photo { aspect-ratio: 3 / 2; }
 
 /* ---- footer ---- */
 .footer { background: var(--black); color: var(--white); text-align: center; padding: 5rem var(--gutter) 4rem; }
 .footer .wordmark span { font-size: 2rem; }
-.footer .label { color: #a5a5a5; margin: 2.5rem auto 0; max-width: none; }
-.footer a { text-decoration: none; }
+.footer .label { color: var(--on-dark-quiet); margin: 1.75rem auto 0; max-width: none; }
+.footer a { display: inline-block; padding: 1rem 0.35rem; text-decoration: none; }
 .footer a:hover { text-decoration: underline; }
 
 @media (max-width: 900px) {
@@ -193,8 +213,8 @@ form .note { margin: 0; }
 
 @media (max-width: 800px) {
   :root { --t-body: 1.125rem; --t-lead: 1.25rem; }
-  .header { padding-top: 6rem; }
-  .header nav { gap: 0.25rem 1.5rem; }
+  .header { padding-top: 3.25rem; }
+  .header nav { gap: 0 1.5rem; margin-top: 1.25rem; padding-bottom: 0.5rem; }
   .hero, .pair, .statement, .dishes, .coffee, .story, .visit-grid { grid-template-columns: minmax(0, 1fr); }
   .hero figure { height: 42vh; min-height: 0; }
   h1 { white-space: normal; font-size: clamp(3.75rem, 19vw, 7rem); }
@@ -207,5 +227,14 @@ form .note { margin: 0; }
    Never intercepts clicks: it lands on links and buttons. */
 .bluebird { position: absolute; left: 0; top: 0; z-index: 50; pointer-events: none; line-height: 0; will-change: transform; }
 .bluebird img { display: block; width: auto; height: auto; max-width: none; object-fit: initial; user-select: none; }
-/* Perched, the bird itself takes taps (hop, then fly off). The box around it never does. */
-.bluebird.is-tappable img { pointer-events: auto; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+/* Breathing while perched. Uses the separate `scale` property so it stacks with
+   the transform the controller writes, about the same origin: the feet. */
+@keyframes bluebird-breathe { 50% { scale: 1.012 1.022; } }
+@media (prefers-reduced-motion: no-preference) {
+  .bluebird.is-idle img { animation: bluebird-breathe 3.4s ease-in-out infinite; }
+}
+
+/* Perched, the bird takes taps (hop, then fly off) on a box around its body.
+   The sprite's transparent margins, which overlap the perch, never do. */
+.bluebird-hit { position: absolute; inset: 6% 16% 20% 16%; }
+.bluebird.is-tappable .bluebird-hit { pointer-events: auto; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }

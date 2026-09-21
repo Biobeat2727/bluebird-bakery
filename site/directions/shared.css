@@ -12,7 +12,15 @@ address { font-style: normal; }
 /* ---- the bird ---- */
 .bluebird { position: absolute; left: 0; top: 0; z-index: 50; pointer-events: none; line-height: 0; will-change: transform; }
 .bluebird img { display: block; width: auto; max-width: none; user-select: none; }
-.bluebird.is-tappable img { pointer-events: auto; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+/* Breathing while perched. Uses the separate `scale` property so it stacks with
+   the transform the controller writes, about the same origin: the feet. */
+@keyframes bluebird-breathe { 50% { scale: 1.012 1.022; } }
+@media (prefers-reduced-motion: no-preference) {
+  .bluebird.is-idle img { animation: bluebird-breathe 3.4s ease-in-out infinite; }
+}
+
+.bluebird-hit { position: absolute; inset: 6% 16% 20% 16%; }
+.bluebird.is-tappable .bluebird-hit { pointer-events: auto; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 
 /* ---- stand-in photos ----
    Flat blocks in the tone the real photograph would have, labelled with the
