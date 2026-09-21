@@ -1,0 +1,23 @@
+{
+  "blend_reopened": true,
+  "controls": [
+    "root",
+    "body",
+    "head",
+    "eye.blink",
+    "wing.front",
+    "wing.back",
+    "tail",
+    "foot.front",
+    "foot.back"
+  ],
+  "meshes": 32,
+  "packed_reference_images": 2,
+  "scenes": [
+    "01 \u2022 Bakery animation",
+    "02 \u2022 Transparent character"
+  ],
+  "frames": 192,
+  "fps": 24,
+  "transparent_render_verified": true
+}

@@ -1,0 +1,74 @@
+/* Shared by the three direction studies: the bird, the stand-in photos, and the
+   comparison chrome. None of this is part of any design. */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; overflow-x: hidden; padding-bottom: 3.5rem; }
+img { max-width: 100%; }
+dl, dd, figure { margin: 0; }
+address { font-style: normal; }
+
+/* ---- the bird ---- */
+.bluebird { position: absolute; left: 0; top: 0; z-index: 50; pointer-events: none; line-height: 0; will-change: transform; }
+.bluebird img { display: block; width: auto; max-width: none; user-select: none; }
+.bluebird.is-tappable img { pointer-events: auto; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+
+/* ---- stand-in photos ----
+   Flat blocks in the tone the real photograph would have, labelled with the
+   shot. Same six in every direction so the systems are what's being compared. */
+.ph {
+  --tone: #b9a88c; --on: rgba(255,255,255,.8);
+  background: var(--tone); color: var(--on);
+  display: flex; align-items: flex-end; padding: 1rem;
+  font: 500 11px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .08em; text-transform: uppercase;
+  min-height: 8rem; overflow: hidden;
+}
+.ph-case      { --tone: #b88c58; }
+.ph-croissant { --tone: #d3a661; }
+.ph-crust     { --tone: #47301f; }
+.ph-hands     { --tone: #d8ccb6; --on: rgba(40,30,20,.6); }
+.ph-shopfront { --tone: #d5d1c6; --on: rgba(40,30,20,.6); }
+.ph-shelves   { --tone: #876748; }
+
+/* Real photographs from the bakery's current site (site/photos). A slot with a
+   photo hides its label; the shopfront has no photo yet and stays a tone block.
+   Scoped to .ph so A's hero text panel, which only borrows a tone, stays flat. */
+.ph[class*="ph-"]:not(.ph-shopfront) { background-size: cover; background-position: center; color: transparent; }
+.ph.ph-case      { background-image: url(../photos/croissant-latte.jpg); }
+.ph.ph-croissant { background-image: url(../photos/croissant-cruffin.jpg); }
+.ph.ph-crust     { background-image: url(../photos/rack-loaves.jpg); }
+.ph.ph-hands     { background-image: url(../photos/shaping-croissants.jpg); }
+.ph.ph-shelves   { background-image: url(../photos/oven-loaves.jpg); }
+.ph.ph-rolls     { background-image: url(../photos/cinnamon-rolls.jpg); }
+.ph.ph-rolling   { background-image: url(../photos/rolling-chocolate.jpg); }
+.ph.ph-toast     { background-image: url(../photos/avocado-toast.jpg); }
+.ph.ph-sando     { background-image: url(../photos/croissant-sando.jpg); }
+.ph.ph-latte     { background-image: url(../photos/latte-doma.jpg); }
+
+/* ---- element labels, so parts can be referred to by name ---- */
+.show-tags [data-tag] { position: relative; }
+.show-tags [data-tag]::after {
+  content: attr(data-tag);
+  position: absolute; top: 0; left: 0; z-index: 40;
+  background: #111; color: #fff; padding: 3px 7px;
+  font: 500 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .04em; text-transform: none; text-align: left;
+  max-width: 100%; pointer-events: none;
+}
+
+/* ---- comparison bar ---- */
+.compare {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .25rem;
+  background: #111; color: #bbb; padding: .4rem .75rem;
+  font: 500 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.compare a, .compare button {
+  font: inherit; color: #ddd; background: none; border: 1px solid transparent;
+  padding: .55rem .8rem; text-decoration: none; cursor: pointer;
+}
+.compare a:hover, .compare button:hover { border-color: #555; }
+.compare a[aria-current] { background: #fff; color: #111; }
+.compare .sep { width: 1px; height: 1.2rem; background: #444; margin-inline: .4rem; }

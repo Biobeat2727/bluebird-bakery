@@ -1,0 +1,18 @@
+# Rendered Blender frame sequences (~245MB). Re-render from the .blend files;
+# see blender-bluebird/README.md.
+blender-bluebird/frames/
+blender-bluebird/flutter-frames/
+
+# Blender backups and build output
+*.blend1
+blender-bluebird/*.log
+
+# OS / editor
+Thumbs.db
+desktop.ini
+.DS_Store
+__pycache__/
+*.pyc
+
+# Claude Code local settings
+.claude/settings.local.json

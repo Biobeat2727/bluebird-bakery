@@ -1,0 +1,131 @@
+/* C · The baker's hand
+   Characterful. A soft, wonky display serif set large and stacked; every colour
+   is sampled from the bird itself (wing navy, belly cream, breast peach, beak
+   gold). Rounded photos and pills are a deliberate register here, applied to
+   photos and buttons only - not to every surface. Bands meet on a scalloped
+   edge taken from the bird's wing feathers.
+   From: rubik-bakery-cafe (type 9: stacked quirky serif vs rounded sans;
+         layout 9: split hero, alternating bands, asymmetric mosaic).
+   Not taken: its moss/clay palette (colour 6) or its hand-drawn brass marks,
+   which are that site's signature. */
+
+:root {
+  --navy: #102a52;
+  --cream: #fbf2df;
+  --peach: #f7d3ab;
+  --gold: #f6aa1c;
+  --ink: #0f1a2e;
+
+  --display: "Fraunces", Georgia, serif;
+  --text: "Nunito", system-ui, sans-serif;
+
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --space: clamp(5rem, 10vw, 9rem);
+  --round: clamp(1.25rem, 2.4vw, 2rem);
+  --scallop: 22px;
+}
+
+body { background: var(--cream); color: var(--ink); font: 400 1.0625rem/1.65 var(--text); }
+.wrap { max-width: 78rem; margin-inline: auto; padding-inline: var(--gutter); }
+p { margin: 0 0 1em; max-width: 34em; }
+a { color: inherit; }
+
+h1, h2, h3 { font-family: var(--display); font-variation-settings: "SOFT" 100, "WONK" 1; font-weight: 400; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(3.5rem, 9.2vw, 8.25rem); line-height: 0.92; letter-spacing: -0.035em; }
+h2 { font-size: clamp(2.5rem, 5.4vw, 4.5rem); line-height: 1; letter-spacing: -0.025em; }
+h3 { font-size: 1.75rem; line-height: 1.1; letter-spacing: -0.01em; }
+em { font-style: italic; color: var(--gold); }
+
+.kicker { font-weight: 700; font-size: 0.875rem; letter-spacing: 0.04em; margin-bottom: 1rem; }
+
+.pill {
+  display: inline-block; background: var(--gold); color: var(--ink);
+  font: 700 0.9375rem/1 var(--text); text-decoration: none;
+  padding: 1rem 1.6rem; border-radius: 999px; border: 2px solid var(--gold);
+}
+.pill:hover { background: transparent; color: var(--gold); }
+.pill-navy { background: var(--navy); border-color: var(--navy); color: var(--cream); }
+.pill-navy:hover { color: var(--navy); }
+.pill-line { background: transparent; border-color: var(--navy); color: var(--navy); }
+.pill-line:hover { background: var(--navy); color: var(--cream); }
+
+.ph { border-radius: var(--round); }
+
+/* Scalloped top edge: a row of half-circles in the band's own colour, sitting
+   on the band above. It is a shape, not a gradient fill. */
+.scallop { position: relative; }
+.scallop::before {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: var(--scallop);
+  background: radial-gradient(circle at 50% 100%, var(--band) calc(var(--scallop) - 0.5px), transparent var(--scallop)) 0 0 / calc(var(--scallop) * 2) var(--scallop) repeat-x;
+}
+
+/* ---- header + hero ---- */
+.top { background: var(--navy); color: var(--cream); padding-bottom: calc(var(--space) + var(--scallop)); }
+.header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 2rem; padding-block: 1.5rem; }
+.wordmark { font: 500 1.625rem/1 var(--display); font-variation-settings: "SOFT" 100, "WONK" 1; letter-spacing: -0.02em; text-decoration: none; margin: 0; }
+.header nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 2rem; font-weight: 600; }
+.header nav a:not(.pill) { text-decoration: none; padding-block: 0.4rem; }
+.header nav a:not(.pill):hover { color: var(--gold); }
+.header .pill { padding: 0.75rem 1.25rem; }
+
+.hero { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(2rem, 5vw, 5rem); align-items: center; padding-top: clamp(4rem, 8vw, 7rem); }
+h1 span, h1 em { display: block; }
+h1 span { padding-left: 0.55em; }
+.hero-copy p { font-size: 1.1875rem; color: #d5dcea; margin-block: 2rem; max-width: 26em; }
+.hero-photos { position: relative; padding-bottom: 3rem; }
+.hero-photos .big { aspect-ratio: 4 / 5; }
+.hero-photos .small { position: absolute; left: -12%; bottom: 0; width: 44%; aspect-ratio: 1; border-radius: 50%; border: 8px solid var(--navy); justify-content: center; text-align: center; align-items: center; }
+
+/* ---- menu board ---- */
+.bake { --band: var(--cream); background: var(--cream); padding-block: var(--space); }
+.head { margin-bottom: 3.5rem; }
+.head h2 { display: inline-block; }
+.menu { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(2rem, 5vw, 4.5rem); }
+.menu h3 { margin-bottom: 1rem; color: var(--navy); }
+.menu dl > div { display: flex; align-items: baseline; gap: 0.6rem; padding-block: 0.55rem; }
+.menu dt { order: 1; }
+.menu dl > div::after { content: ""; order: 2; flex: 1; border-bottom: 2px dotted #c5b796; transform: translateY(-0.3em); }
+.menu dd { order: 3; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* ---- mosaic ---- */
+.mosaic { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: clamp(5rem, 9vw, 8.5rem); gap: clamp(0.75rem, 1.6vw, 1.5rem); padding-bottom: calc(var(--space) + var(--scallop)); }
+.m1 { grid-column: 1 / 6;  grid-row: 1 / 5; }
+.m2 { grid-column: 6 / 10; grid-row: 2 / 5; }
+.m3 { grid-column: 10 / 13; grid-row: 1 / 4; }
+.m4 { grid-column: 3 / 6;  grid-row: 5 / 7; }
+.m5 { grid-column: 6 / 12; grid-row: 5 / 8; }
+
+/* ---- story ---- */
+.story { --band: var(--peach); background: var(--peach); padding-block: var(--space) calc(var(--space) + var(--scallop)); }
+.story-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(2rem, 6vw, 6rem); align-items: end; }
+.story h2 { color: var(--navy); }
+
+/* ---- visit ---- */
+.visit { --band: var(--navy); background: var(--navy); color: var(--cream); padding-block: var(--space) calc(var(--space) + var(--scallop)); }
+.visit-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+.visit h2 { margin-bottom: 2.5rem; }
+.hours > div { display: flex; justify-content: space-between; align-items: baseline; gap: 1.5rem; padding-block: 0.9rem; border-bottom: 2px dotted #3f5a8a; }
+.hours dt { font-weight: 600; }
+.hours dd { font: 400 1.75rem/1 var(--display); font-variation-settings: "SOFT" 100, "WONK" 1; color: var(--gold); white-space: nowrap; }
+.visit address { margin-block: 2rem 1.5rem; color: #d5dcea; }
+.visit .ph { aspect-ratio: 4 / 5; }
+
+/* ---- order ---- */
+.order { --band: var(--cream); background: var(--cream); padding-block: var(--space); }
+.order h2 { max-width: 12em; margin-bottom: 1.5rem; color: var(--navy); }
+.contact { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.25rem; max-width: none; }
+.contact .pill { font-size: 1.125rem; padding: 1.2rem 1.9rem; }
+
+/* ---- footer ---- */
+.footer { background: var(--ink); color: #b9c3d6; padding-block: 3.5rem; font-size: 0.9375rem; }
+.footer .wordmark { color: var(--cream); margin-bottom: 0.8rem; }
+.footer p { margin-bottom: 0; }
+
+@media (max-width: 800px) {
+  .hero, .menu, .story-grid, .visit-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero-photos { margin-left: 8%; }
+  .mosaic { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 38vw; }
+  .mosaic .ph { grid-column: auto; grid-row: auto; }
+  .mosaic .m1 { grid-column: 1 / -1; }
+  .story-grid { align-items: start; }
+}

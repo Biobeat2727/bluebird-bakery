@@ -1,0 +1,123 @@
+{
+  "canvas": {
+    "width": 559,
+    "height": 512
+  },
+  "anchor": {
+    "x": 389.19,
+    "y": 210.22
+  },
+  "note": "anchor is the bird's eye; footOffsetY is measured down from the anchor",
+  "frames": {
+    "idle": {
+      "file": "idle.webp",
+      "source": "1-idle.png",
+      "sourceScale": 0.7722,
+      "footOffsetY": 216.5,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "blink": {
+      "file": "blink.webp",
+      "source": "2-blink.png",
+      "sourceScale": 0.7714,
+      "footOffsetY": 222.8,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "crouch": {
+      "file": "crouch.webp",
+      "source": "3-takeoff-crouch.png",
+      "sourceScale": 0.8206,
+      "footOffsetY": 154.4,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "wings-up": {
+      "file": "wings-up.webp",
+      "source": "4-wings up.png",
+      "sourceScale": 1.1393,
+      "footOffsetY": null,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "wings-mid": {
+      "file": "wings-mid.webp",
+      "source": "5-wings mid.png",
+      "sourceScale": 1.1598,
+      "footOffsetY": null,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "wings-down": {
+      "file": "wings-down.webp",
+      "source": "6-wings down.png",
+      "sourceScale": 1.0428,
+      "footOffsetY": null,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "glide": {
+      "file": "glide.webp",
+      "source": "7-flight glide.png",
+      "sourceScale": 0.9605,
+      "footOffsetY": null,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "approach": {
+      "file": "approach.webp",
+      "source": "8-landing approach.png",
+      "sourceScale": 1.1036,
+      "footOffsetY": 229.7,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "impact": {
+      "file": "impact.webp",
+      "source": "9-landing impact.png",
+      "sourceScale": 1.1106,
+      "footOffsetY": 219.7,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "settle": {
+      "file": "settle.webp",
+      "source": "10-landing settle.png",
+      "sourceScale": 0.9364,
+      "footOffsetY": 165.4,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "perch": {
+      "file": "perch.webp",
+      "source": "11-perch again.png",
+      "sourceScale": 0.7659,
+      "footOffsetY": 220.2,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
+    }
+  }
+}

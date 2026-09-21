@@ -1,0 +1,211 @@
+/* Bluebird Bakery
+   No palette: white, near-black, one pale grey, one mid grey. The bird is the
+   only colour on the page, and the photography carries all the warmth.
+   Four type registers, one job each:
+     Bodoni Moda       the wordmark, nowhere else
+     Jost 500 caps     every label, nav item and button (tracked .2em)
+     Barlow Cond. 300  display headings, uppercase
+     Jost 300          everything you read
+   Header, hero and footer are symmetrical. Everything you read has a hard left
+   edge. Corners are square throughout.
+   References (site-library): l-objet for the system, icb-builders for square
+   corners and edge-to-edge photography. */
+
+:root {
+  --white: #ffffff;
+  --black: #1b1b1b;
+  --pale: #f3f3f1;
+  --grey: #6b6b6b;
+  --line: #d8d8d4;
+
+  --logo: "Bodoni Moda", "Didot", serif;
+  --label: "Jost", "Futura", sans-serif;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+
+  --t-label: 0.75rem;
+  --t-small: 1.0625rem;
+  --t-body: 1.25rem;
+  --t-lead: 1.5rem;
+  --t-h3: 1.25rem;
+  --t-h2: clamp(2.5rem, 4.6vw, 3.75rem);
+
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --space: clamp(5rem, 10vw, 9rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body { margin: 0; overflow-x: hidden; background: var(--white); color: var(--black); font: 300 var(--t-body)/1.6 var(--label); }
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+figure, dl, dd, ol, ul { margin: 0; padding: 0; }
+ol, ul { list-style: none; }
+address { font-style: normal; }
+a { color: inherit; text-underline-offset: 0.25em; text-decoration-thickness: 1px; }
+p { margin: 0 0 1em; max-width: 36em; }
+:focus-visible { outline: 2px solid var(--black); outline-offset: 3px; }
+.order :focus-visible, .footer :focus-visible { outline-color: var(--white); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+
+.wrap { max-width: 80rem; margin-inline: auto; padding-inline: var(--gutter); }
+
+h1, h2 { font-family: var(--display); font-weight: 300; text-transform: uppercase; margin: 0; line-height: 0.95; }
+h2 { font-size: var(--t-h2); letter-spacing: 0.01em; width: fit-content; max-width: 14em; margin-bottom: 2rem; text-wrap: balance; }
+h3 { font: 400 var(--t-h3)/1.3 var(--label); margin: 0; }
+
+.label { font: 500 var(--t-label)/1.4 var(--label); letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); margin-bottom: 1.5rem; }
+.note { font-size: var(--t-small); color: var(--grey); }
+.section-head { margin-bottom: 3.5rem; }
+.section-head p:last-child { margin-bottom: 0; }
+.hair { height: 1px; background: var(--black); margin-bottom: 3rem; }
+
+.btn {
+  display: inline-block; background: var(--white); color: var(--black); cursor: pointer;
+  font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;
+  padding: 1.05rem 2rem; border: 1px solid var(--white);
+}
+a.btn:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+.btn-dark { background: var(--black); color: var(--white); border-color: var(--black); }
+a.btn-dark:hover, button.btn-dark:hover { background: var(--white); color: var(--black); }
+
+/* price lists */
+dl > div { display: flex; justify-content: space-between; gap: 1.5rem; padding-block: 0.9rem; border-bottom: 1px solid var(--line); font-size: var(--t-small); }
+dl > div:first-child { border-top: 1px solid var(--black); }
+dd { color: var(--grey); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* ---- utility + header ---- */
+.utility { margin: 0; max-width: none; background: var(--pale); text-align: center; font: 500 0.6875rem/1.4 var(--label); letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); padding: 0.7rem 1rem; }
+
+/* Tall on purpose: the bird stands on the wordmark and needs the air above it. */
+.header { text-align: center; padding: 7rem var(--gutter) 0; border-bottom: 1px solid var(--line); }
+.wordmark { display: inline-block; text-decoration: none; margin: 0; max-width: none; }
+.wordmark span { display: inline-block; font: 400 clamp(2.75rem, 6vw, 4rem)/1 var(--logo); letter-spacing: 0.04em; text-transform: uppercase; }
+.wordmark small { display: block; font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.62em; text-indent: 0.62em; text-transform: uppercase; margin-top: 0.9rem; }
+.header nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.25rem 2.75rem; margin-top: 2.5rem; padding-bottom: 1.4rem; }
+.header nav a { font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; padding-block: 0.6rem; border-bottom: 1px solid transparent; }
+.header nav a:hover { border-bottom-color: var(--black); }
+
+/* ---- hero ---- */
+.hero { position: relative; display: grid; grid-template-columns: 1fr 1fr; }
+.hero figure { position: relative; height: min(84vh, 52rem); min-height: 28rem; }
+/* White display type needs a consistent ground whatever the photo is. */
+.hero figure::after { content: ""; position: absolute; inset: 0; background: rgba(20, 16, 12, 0.4); }
+.hero-over { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2.5rem; text-align: center; padding: var(--gutter); }
+/* One line, spanning the seam. */
+h1 { font-size: clamp(3.75rem, 11vw, 13rem); letter-spacing: 0.02em; color: var(--white); white-space: nowrap; }
+
+/* ---- statement ---- */
+.statement { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: var(--gutter); padding-block: var(--space); }
+.statement p:last-child { font-size: var(--t-lead); line-height: 1.5; max-width: 30em; margin: 0; }
+
+/* ---- image pairs ---- */
+.pair { display: grid; grid-template-columns: 1fr 1fr; }
+.pair-photo { position: relative; height: min(70vh, 44rem); min-height: 22rem; }
+.pair-short .pair-photo { height: min(56vh, 34rem); }
+.pair-photo .btn { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.pair-body { padding: 2.5rem var(--gutter) var(--space); }
+.pair-body .note { margin-block: 0 1.25rem; }
+.pair-body dl + .note { margin-block: 1.5rem 0; }
+
+/* ---- bread schedule ---- */
+.schedule { padding-bottom: var(--space); }
+.week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-top: 1px solid var(--black); margin-bottom: 2.5rem; }
+.week li { padding: 1.25rem 1rem 1.75rem 0; border-bottom: 1px solid var(--line); min-height: 9rem; }
+.week li + li { padding-left: 1rem; border-left: 1px solid var(--line); }
+.week .label { margin-bottom: 0.9rem; }
+.week p { margin: 0; font-size: var(--t-small); line-height: 1.5; }
+.week .quiet { color: var(--grey); }
+/* Today is the one inverted cell on the page. */
+.week .today { background: var(--black); color: var(--white); padding-left: 1rem; border-color: var(--black); }
+.week .today .label, .week .today .quiet { color: #bdbdbd; }
+
+/* ---- kitchen ---- */
+.kitchen { padding-block: var(--space); }
+.dishes { display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(2rem, 7vw, 7rem); border-top: 1px solid var(--black); }
+.dishes article { padding-block: 1.4rem; border-bottom: 1px solid var(--line); }
+.dishes h3 { display: flex; justify-content: space-between; gap: 1.5rem; }
+.dishes h3 span { color: var(--grey); font-weight: 300; font-variant-numeric: tabular-nums; }
+.dishes p { margin: 0.35rem 0 0; font-size: var(--t-small); color: var(--grey); max-width: 30em; }
+
+/* ---- coffee ---- */
+.band { background: var(--pale); padding-block: var(--space); }
+.coffee { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(2rem, 7vw, 7rem); align-items: start; }
+table { width: 100%; border-collapse: collapse; font-size: var(--t-small); margin-top: 2.5rem; font-variant-numeric: tabular-nums; }
+thead th { font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); padding-bottom: 0.9rem; border-bottom: 1px solid var(--black); }
+th, td { text-align: right; padding: 0.9rem 0 0.9rem 1rem; }
+tbody th { text-align: left; font-weight: 300; padding-left: 0; }
+tbody tr { border-bottom: 1px solid var(--line); }
+td { color: var(--grey); }
+.short > div:first-child { border-top: 0; }
+.coffee-photo { aspect-ratio: 16 / 10; margin-bottom: 3rem; }
+.coffee .label { margin-bottom: 0.6rem; }
+.coffee .note { margin-bottom: 2rem; }
+
+/* ---- story + partners ---- */
+.story { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(2rem, 7vw, 7rem); align-items: center; padding-block: var(--space); }
+.story-photo { aspect-ratio: 4 / 5; }
+.partners { padding-bottom: var(--space); }
+.partner-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(2rem, 5vw, 5rem); font-size: var(--t-small); }
+.partner-list li { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-block: 0.9rem; border-bottom: 1px solid var(--line); }
+.partner-list span { font: 500 0.6875rem/1.4 var(--label); letter-spacing: 0.18em; text-transform: uppercase; color: var(--grey); text-align: right; }
+
+/* ---- special orders + message ---- */
+.order, .message { padding: var(--space) var(--gutter); }
+.order { background: var(--black); color: var(--white); }
+.order .label { color: #a5a5a5; }
+.order p { color: #d6d6d6; }
+.contact { margin-top: 2rem; font: 300 clamp(2rem, 3.4vw, 2.75rem)/1.1 var(--display); letter-spacing: 0.03em; }
+.contact a { color: var(--white); text-decoration: none; border-bottom: 1px solid #777; padding-bottom: 0.2rem; }
+.contact a:hover { border-bottom-color: var(--white); }
+.message { background: var(--pale); }
+form { display: grid; gap: 1.75rem; max-width: 32rem; }
+label { display: grid; gap: 0.5rem; font: 500 var(--t-label)/1.4 var(--label); letter-spacing: 0.2em; text-transform: uppercase; color: var(--grey); }
+input, textarea { font: 300 var(--t-small)/1.5 var(--label); color: var(--black); background: transparent; border: 0; border-bottom: 1px solid var(--black); border-radius: 0; padding: 0.5rem 0; resize: vertical; }
+input:focus-visible, textarea:focus-visible { outline: 0; border-bottom-width: 2px; }
+form .btn { justify-self: start; }
+form .note { margin: 0; }
+
+/* ---- visit ---- */
+.visit { padding-block: var(--space); }
+.visit-grid { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 5fr); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+.visit address { margin-bottom: 2rem; }
+.visit address a { text-decoration: none; }
+.visit-photo { aspect-ratio: 3 / 2; }
+
+/* ---- footer ---- */
+.footer { background: var(--black); color: var(--white); text-align: center; padding: 5rem var(--gutter) 4rem; }
+.footer .wordmark span { font-size: 2rem; }
+.footer .label { color: #a5a5a5; margin: 2.5rem auto 0; max-width: none; }
+.footer a { text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+@media (max-width: 900px) {
+  .week { grid-template-columns: 1fr; }
+  .week li, .week li + li { display: flex; justify-content: space-between; align-items: baseline; gap: 1.5rem; min-height: 0; padding: 1rem 0; border-left: 0; }
+  .week .today { padding-inline: 1rem; }
+  .week .label { margin: 0; }
+  .week p:last-child { text-align: right; }
+  .week br { display: none; }
+  .week p:last-child { word-spacing: 0.4em; }
+  .partner-list { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 800px) {
+  :root { --t-body: 1.125rem; --t-lead: 1.25rem; }
+  .header { padding-top: 6rem; }
+  .header nav { gap: 0.25rem 1.5rem; }
+  .hero, .pair, .statement, .dishes, .coffee, .story, .visit-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero figure { height: 42vh; min-height: 0; }
+  h1 { white-space: normal; font-size: clamp(3.75rem, 19vw, 7rem); }
+  .pair-photo, .pair-short .pair-photo { height: 70vw; min-height: 0; }
+  .partner-list { grid-template-columns: 1fr; }
+}
+
+/* ---- the bird ----
+   Absolutely positioned in document space; BluebirdFlight writes the transform.
+   Never intercepts clicks: it lands on links and buttons. */
+.bluebird { position: absolute; left: 0; top: 0; z-index: 50; pointer-events: none; line-height: 0; will-change: transform; }
+.bluebird img { display: block; width: auto; height: auto; max-width: none; object-fit: initial; user-select: none; }
+/* Perched, the bird itself takes taps (hop, then fly off). The box around it never does. */
+.bluebird.is-tappable img { pointer-events: auto; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
