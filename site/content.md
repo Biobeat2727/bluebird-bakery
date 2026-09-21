@@ -121,9 +121,10 @@ Agricultural Center (apples), Thunder's Catch (smoked salmon), Upside Kombucha (
 
 Pulled from the current site on 2026-09-20. Full-size originals are in `photos/original/`
 (some are 4000x6000). `python tools/build_photos.py` turns them into the WebP sizes and JPEG
-fallbacks in `photos/`; add a new original to the PHOTOS map in that script and rerun. File names on the old site
-credit two shoots: "Racheal_Baker_Bluebird" and "BLUEBIRD-JAN2023". Confirm the bakery has the
-rights to reuse them on a new site, and ask for the rest of both shoots.
+fallbacks in `photos/`; add a new original to the PHOTOS map in that script and rerun. These are the bakery's own
+photos and Jill commissioned this rebuild, so they are cleared for the new site. File names point
+to two shoots ("Racheal_Baker_Bluebird" and "BLUEBIRD-JAN2023"); the rest of both would be
+worth asking for, mainly for a higher-res bread hero and a shopfront shot.
 
 High-res: cinnamon-rolls, shaping-croissants, rolling-chocolate, croissant-cruffin,
 croissant-latte, croissant-sando, latte-doma, avocado-toast (1602px).
