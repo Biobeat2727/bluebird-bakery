@@ -11,6 +11,7 @@
  *   data-perch-at="0.8"     where along the top edge, 0 = left, 1 = right (default 0.85)
  *   data-perch-dy="6"       px to drop the feet below the top edge (text has leading)
  *   data-perch-face="left"  which way to face once landed (default: direction of travel)
+ *   data-perch-home         the first landing, whenever it is on screen at page load
  *
  * Tapping the perched bird makes it hop about on its perch. Tapping it again
  * makes it fly off; it comes back on the next scroll.
@@ -124,7 +125,10 @@ export class BluebirdFlight {
     this.perches = [...document.querySelectorAll('[data-perch]')];
     if (!this.perches.length) return;
 
-    const first = this.#pickPerch() || this.perches[0];
+    const home = document.querySelector('[data-perch-home]');
+    const homeTop = home && home.getBoundingClientRect().top;
+    const first = (home && homeTop > 0 && homeTop < window.innerHeight * 0.9 && home)
+      || this.#pickPerch() || this.perches[0];
 
     if (this.reducedMotion) {
       // No flights at all: the bird simply lives on its first perch.
