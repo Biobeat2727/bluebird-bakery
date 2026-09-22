@@ -27,7 +27,7 @@
 <p class="utility"><span id="openStatus">Open daily 8 to 3</span><span class="sep" aria-hidden="true">&middot;</span><a href="https://www.google.com/maps/search/?api=1&query=Bluebird+Bakery+329+N+First+Ave+Sandpoint+ID">329 N First Ave<span class="u-wide">, Sandpoint</span></a><span class="sep u-wide" aria-hidden="true">&middot;</span><a class="u-wide" href="tel:+12082658730">(208) 265-8730</a></p>
 
 <header class="header">
-  <a class="lockup" href="#top"><img src="brand/badge.png" srcset="brand/badge-180.webp 180w, brand/badge-360.webp 360w, brand/badge-540.webp 540w, brand/badge-720.webp 720w, brand/badge-1080.webp 1080w" sizes="(max-width: 800px) 4.5rem, 6.5rem" width="360" height="360" alt=""><span class="wordmark"><span data-perch data-perch-home data-perch-at="0.97" data-perch-dy="9" data-perch-face="left">Bluebird</span><small>Bakery</small></span></a>
+  <a class="lockup" href="#top" aria-label="Bluebird Bakery"><img src="brand/badge.png" srcset="brand/badge-180.webp 180w, brand/badge-360.webp 360w, brand/badge-540.webp 540w, brand/badge-720.webp 720w, brand/badge-1080.webp 1080w" sizes="(max-width: 800px) 6.25rem, 9.5rem" width="360" height="360" alt=""><span class="wordmark"><span data-perch data-perch-home data-perch-at="0.97" data-perch-dy="9" data-perch-face="left">Bluebird</span><small>Bakery</small></span></a>
   <nav aria-label="Sections">
     <a href="#bake">Bread<span class="u-wide"> and pastry</span></a>
     <a href="#kitchen">Kitchen</a>
@@ -36,6 +36,22 @@
     <a href="#visit">Visit</a>
   </nav>
 </header>
+
+<!-- Desktop: slides down when you scroll back up, so the sections are never far
+     away on a long page. nav.js shows and hides it. -->
+<nav class="stickybar" aria-label="Sections, pinned" inert>
+  <div class="stickybar-in">
+    <a class="stickybar-home" href="#top" aria-label="Bluebird Bakery, back to top"><img src="brand/badge-180.webp" width="180" height="180" alt=""></a>
+    <div class="stickybar-links">
+      <a href="#bake" data-section="bake">Bread and pastry</a>
+      <a href="#kitchen" data-section="kitchen">Kitchen</a>
+      <a href="#coffee" data-section="coffee">Coffee</a>
+      <a href="#story" data-section="story">Our story</a>
+      <a href="#visit" data-section="visit">Visit</a>
+    </div>
+    <a class="stickybar-call" href="tel:+12082658730">(208) 265-8730</a>
+  </div>
+</nav>
 
 <main id="top">
 
@@ -293,13 +309,35 @@
   <p class="label footer-address">329 N First Ave, Sandpoint, Idaho</p>
 </footer>
 
-<!-- Phones only: the two things people on their way need, always in reach. -->
-<nav class="quickbar" aria-label="Call or get directions">
+<!-- Phones only: call, get directions, or open the menu, always in reach.
+     The menu sits bottom right, under the thumb. -->
+<nav class="quickbar" aria-label="Quick actions">
   <a href="tel:+12082658730">Call</a>
-  <a href="https://www.google.com/maps/search/?api=1&query=Bluebird+Bakery+329+N+First+Ave+Sandpoint+ID">Directions</a>
+  <a class="quickbar-directions" href="https://www.google.com/maps/search/?api=1&query=Bluebird+Bakery+329+N+First+Ave+Sandpoint+ID">Directions</a>
+  <button type="button" class="quickbar-menu" aria-label="Menu" aria-expanded="false" aria-controls="sectionSheet"><span></span><span></span><span></span></button>
 </nav>
 
+<div class="sheet" id="sectionSheet" hidden>
+  <div class="sheet-backdrop" data-sheet-close></div>
+  <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-head">
+      <p class="label" id="sheetTitle">Jump to</p>
+      <button type="button" class="sheet-close" data-sheet-close>Close</button>
+    </div>
+    <ul class="sheet-list">
+      <li><a href="#bake" data-section="bake">Bread and pastry</a></li>
+      <li><a href="#schedule">Today's bread</a></li>
+      <li><a href="#kitchen" data-section="kitchen">Kitchen menu</a></li>
+      <li><a href="#coffee" data-section="coffee">Coffee and drinks</a></li>
+      <li><a href="#story" data-section="story">Our story</a></li>
+      <li><a href="#order" data-section="order">Special orders</a></li>
+      <li><a href="#visit" data-section="visit">Hours and directions</a></li>
+    </ul>
+  </div>
+</div>
+
 <script src="src/today.js"></script>
+<script src="src/nav.js"></script>
 <script type="module" src="src/main.js"></script>
 </body>
 </html>

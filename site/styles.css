@@ -67,7 +67,7 @@ a { color: inherit; text-underline-offset: 0.25em; text-decoration-thickness: 1p
 @media (hover: hover) { main a:not(.btn):hover { color: var(--sky); } }
 p { margin: 0 0 1em; max-width: 36em; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.utility :focus-visible, .order :focus-visible, .message :focus-visible, .footer :focus-visible, .quickbar :focus-visible, .hero :focus-visible { outline-color: var(--white); }
+.utility :focus-visible, .order :focus-visible, .message :focus-visible, .footer :focus-visible, .quickbar :focus-visible, .hero :focus-visible, .quickbar-menu:focus-visible { outline-color: var(--white); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 
 .skip { position: absolute; left: 0.5rem; top: -4rem; z-index: 100; background: var(--ink); color: var(--white); padding: 0.9rem 1.25rem; font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; }
@@ -111,12 +111,32 @@ dd { color: var(--grey); white-space: nowrap; font-variant-numeric: tabular-nums
 
 /* Tall on purpose: the bird stands on the wordmark and needs the air above it. */
 .header { text-align: center; padding: 6rem var(--gutter) 0; border-bottom: 1px solid var(--line); }
-.wordmark { display: inline-block; text-decoration: none; margin: 0; max-width: none; }
-.wordmark span { display: inline-block; font: 400 clamp(2.75rem, 6vw, 4rem)/1 var(--logo); letter-spacing: 0.04em; text-transform: uppercase; }
-.wordmark small { display: block; font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.62em; text-indent: 0.62em; text-transform: uppercase; margin-top: 0.9rem; }
+.wordmark { --wm: clamp(2.75rem, 6vw, 4rem); display: inline-block; text-decoration: none; margin: 0; max-width: none; }
+.wordmark > span { display: inline-block; font: 400 var(--wm)/1 var(--logo); letter-spacing: 0.04em; text-transform: uppercase; }
+/* BAKERY starts on the stem of BLUEBIRD's B. The Bodoni B's stem sits 0.106em
+   in from its box, the Jost B's 0.08em; the inset is the difference. */
+.wordmark small { display: block; font: 500 clamp(0.875rem, 1.35vw, 1.0625rem)/1 var(--label); letter-spacing: 0.34em; text-transform: uppercase; margin-top: 0.8rem; padding-left: calc(var(--wm) * 0.106 - 0.08em); }
 .header nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 2.75rem; margin-top: 2rem; padding-bottom: 1rem; }
 .header nav a { font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; padding-block: 1rem; border-bottom: 1px solid transparent; }
 .header nav a:hover { border-bottom-color: var(--sky); color: var(--sky); }
+
+/* ---- pinned bar (desktop) ----
+   Off screen until you scroll back up past the header; nav.js toggles it. */
+.stickybar { position: fixed; top: 0; left: 0; right: 0; z-index: 70; background: var(--white); border-bottom: 1px solid var(--line);
+  box-shadow: 0 8px 24px -12px rgba(10, 22, 38, 0.25); transform: translateY(calc(-100% - 30px)); visibility: hidden;
+  transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.34s; }
+.stickybar.is-shown { transform: none; visibility: visible; transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s; }
+@media (prefers-reduced-motion: reduce) { .stickybar, .stickybar.is-shown { transition: none; } }
+.stickybar-in { display: flex; align-items: center; gap: 2rem; max-width: 80rem; height: 4.25rem; margin-inline: auto; padding-inline: var(--gutter); }
+.stickybar-home { flex: none; line-height: 0; }
+.stickybar-home img { width: 2.9rem; height: auto; }
+.stickybar-links { display: flex; justify-content: center; gap: 0 2.5rem; margin-inline: auto; }
+.stickybar a:not(.stickybar-home) { font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; padding-block: 1rem; border-bottom: 1px solid transparent; }
+.stickybar-links a:hover, .stickybar-links a[aria-current] { color: var(--sky); border-bottom-color: var(--sky); }
+.stickybar-call { flex: none; color: var(--sky); }
+.stickybar-call:hover { border-bottom-color: var(--sky); }
+/* Jumping to a section lands clear of the bar. */
+@media (min-width: 801px) { html { scroll-padding-top: 5.25rem; } }
 
 /* ---- hero ---- */
 .hero { position: relative; display: grid; grid-template-columns: 1fr 1fr; background: var(--ink); }
@@ -129,10 +149,13 @@ dd { color: var(--grey); white-space: nowrap; font-variant-numeric: tabular-nums
 .hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin: 0; max-width: none; }
 
 /* The bakery's badge and the Bodoni wordmark, locked up side by side. */
-.lockup { display: inline-flex; align-items: center; gap: clamp(1rem, 2.5vw, 1.75rem); text-decoration: none; }
-.lockup img { width: 6.5rem; height: auto; flex: none; }
+/* The badge is drawn at --badge but takes up only --slot in the layout. The
+   extra spills left and evenly up and down, so a bigger badge never moves the
+   lettering. */
+.lockup { --slot: 6.5rem; --badge: 9.5rem; display: inline-flex; vertical-align: top; align-items: center; gap: clamp(1rem, 2.5vw, 1.75rem); text-decoration: none; }
+.lockup img { width: var(--badge); height: auto; flex: none;
+  margin: calc((var(--slot) - var(--badge)) / 2) 0 calc((var(--slot) - var(--badge)) / 2) calc(var(--slot) - var(--badge)); }
 .lockup .wordmark { text-align: left; }
-.lockup .wordmark small { text-indent: 0; }
 
 /* ---- statement ---- */
 .statement { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: var(--gutter); padding-block: var(--space); }
@@ -270,7 +293,7 @@ form .note { margin: 0; min-height: 1.6em; }
   .hero figure { height: 64vh; min-height: 26rem; }
   .hero figure + figure { display: none; }
   .hero-line { letter-spacing: 0.16em; font-size: 0.6875rem; }
-  .lockup img { width: 4.5rem; }
+  .lockup { --slot: 4.5rem; --badge: 6.25rem; }
   .pair-photo, .pair-short .pair-photo { height: 70vw; min-height: 0; }
   .split .pair-photo { position: relative; }
   .split-flip .pair-photo { order: 0; }
@@ -280,21 +303,55 @@ form .note { margin: 0; min-height: 1.6em; }
   .seal { align-items: flex-start; }
   .badge-seal { width: 4.5rem; }
 
-  .quickbar { display: grid; grid-template-columns: 1fr 1fr; position: fixed; z-index: 60; left: 0; right: 0; bottom: 0;
+  .stickybar { display: none; }
+  .quickbar { display: grid; grid-template-columns: 1fr 1fr 3.75rem; position: fixed; z-index: 66; left: 0; right: 0; bottom: 0;
     padding-bottom: env(safe-area-inset-bottom); background: var(--ink); box-shadow: 0 -6px 20px rgba(10, 22, 38, 0.18); }
-  .quickbar a { display: grid; place-items: center; height: 3.5rem; color: var(--white); text-decoration: none;
+  .quickbar a, .quickbar button { display: grid; place-items: center; height: 3.5rem; color: var(--white); text-decoration: none; background: none; border: 0; border-radius: 0; cursor: pointer;
     font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; }
-  .quickbar a + a { background: var(--sky); }
+  .quickbar .quickbar-directions { background: var(--sky); }
+  /* Three bars that fold into an X while the menu is open. */
+  .quickbar-menu { position: relative; }
+  .quickbar-menu span { position: absolute; left: 50%; top: 50%; width: 1.35rem; height: 2px; margin: -1px 0 0 -0.675rem; background: currentColor;
+    transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease-out; }
+  .quickbar-menu span:nth-child(1) { transform: translateY(-0.4rem); }
+  .quickbar-menu span:nth-child(3) { transform: translateY(0.4rem); }
+  .quickbar .quickbar-menu[aria-expanded="true"] { background: var(--gold); color: var(--ink); }
+  .quickbar-menu[aria-expanded="true"] span:nth-child(1) { transform: rotate(45deg); }
+  .quickbar-menu[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .quickbar-menu[aria-expanded="true"] span:nth-child(3) { transform: rotate(-45deg); }
+  @media (prefers-reduced-motion: reduce) { .quickbar-menu span { transition: none; } }
+
+  /* The sections list rises out of the bottom bar, which stays on top of it
+     so the menu button also closes it. */
+  .sheet { position: fixed; inset: 0; z-index: 64; }
+  .sheet-backdrop { position: absolute; inset: 0; background: rgba(10, 22, 38, 0.45); opacity: 0; transition: opacity 0.26s ease-out; }
+  .sheet-panel { position: absolute; left: 0; right: 0; bottom: var(--quickbar); max-height: calc(100% - var(--quickbar) - 3rem); overflow-y: auto;
+    background: var(--white); padding: 1.25rem var(--gutter) 0.75rem; box-shadow: 0 -12px 32px -12px rgba(10, 22, 38, 0.35);
+    transform: translateY(calc(100% + var(--quickbar))); transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); }
+  .sheet.is-open .sheet-backdrop { opacity: 1; }
+  .sheet.is-open .sheet-panel { transform: none; }
+  @media (prefers-reduced-motion: reduce) { .sheet-backdrop, .sheet-panel { transition: none; } }
+  .sheet-head { display: flex; justify-content: space-between; align-items: center; }
+  .sheet-head .label { margin: 0; }
+  .sheet-close { min-height: 2.75rem; padding: 0 0 0 1rem; background: none; border: 0; cursor: pointer; color: var(--ink);
+    font: 500 var(--t-label)/1 var(--label); letter-spacing: 0.2em; text-transform: uppercase; }
+  .sheet-list { margin-top: 0.5rem; border-top: 1px solid var(--ink); }
+  .sheet-list a { display: flex; align-items: center; min-height: 3.25rem; padding-block: 0.4rem; border-bottom: 1px solid var(--line);
+    font: 300 1.75rem/1 var(--display); letter-spacing: 0.02em; text-transform: uppercase; text-decoration: none; }
+  .sheet-list a[aria-current] { color: var(--sky); }
+  .sheet-list li:last-child a { border-bottom: 0; }
+  .sheet-open, .sheet-open body { overflow: hidden; }
 }
 
 /* Narrow phones: the lockup shrinks to keep clear of the edges. */
 @media (max-width: 400px) {
   .lockup { gap: 0.85rem; }
-  .lockup img { width: 3.75rem; }
-  .wordmark span { font-size: 2.3rem; }
+  .lockup { --slot: 3.75rem; --badge: 5.25rem; }
+  .wordmark { --wm: 2.3rem; }
 }
 
 @media (max-width: 360px) {
+  .lockup { --badge: var(--slot); }
   .header nav { gap: 0 0.8rem; }
   .header nav a { letter-spacing: 0.1em; }
 }
