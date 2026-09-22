@@ -224,8 +224,6 @@ td { color: var(--grey); }
 /* ---- story + partners ---- */
 .story { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(2rem, 7vw, 7rem); align-items: center; padding-block: var(--space); }
 .story-photo { aspect-ratio: 4 / 5; }
-.seal { display: flex; align-items: center; gap: 1.5rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
-.seal p { margin: 0; font-size: var(--t-small); color: var(--grey); max-width: 26em; }
 .partners { padding-bottom: var(--space); }
 .partners-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 7vw, 7rem); align-items: start; }
 .partner-list > div { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1.5rem; align-items: baseline; }
@@ -268,7 +266,6 @@ form .note { margin: 0; min-height: 1.6em; }
 .footer { background: var(--ink); color: var(--white); text-align: center; padding: 5rem var(--gutter) 4rem; }
 .badge { width: auto; height: auto; object-fit: contain; }
 .badge-footer { width: 10.5rem; margin-inline: auto; }
-.badge-seal { width: 6rem; flex: none; }
 .footer .label { color: var(--on-dark-quiet); margin: 2rem auto 0; max-width: none; }
 .footer .footer-address { margin-top: 0.25rem; }
 .footer a { display: inline-block; padding: 1rem 0.35rem; text-decoration: none; }
@@ -300,9 +297,7 @@ form .note { margin: 0; min-height: 1.6em; }
   .week .today { margin-inline: -0.75rem; padding-inline: 0.75rem; }
   .course + .course { margin-top: 3rem; }
   .partner-list > div { grid-template-columns: minmax(0, 1fr); gap: 0.35rem; }
-  .seal { align-items: flex-start; }
-  .badge-seal { width: 4.5rem; }
-
+    
   .stickybar { display: none; }
   .quickbar { display: grid; grid-template-columns: 1fr 1fr 3.75rem; position: fixed; z-index: 66; left: 0; right: 0; bottom: 0;
     padding-bottom: env(safe-area-inset-bottom); background: var(--ink); box-shadow: 0 -6px 20px rgba(10, 22, 38, 0.18); }
