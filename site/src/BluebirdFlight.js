@@ -82,7 +82,14 @@ export class BluebirdFlight {
     this.hit = document.createElement('span');
     this.hit.className = 'bluebird-hit';
     this.el.appendChild(this.hit);
-    document.body.appendChild(this.el);
+    // The bird flies in from, and away to, points past the edges of the page.
+    // Anything positioned out there widens the document, and phones then let
+    // you scroll sideways into it (overflow-x on <body> doesn't stop them).
+    // So it lives in a page-sized layer that clips what's outside.
+    this.layer = document.createElement('div');
+    this.layer.className = 'bluebird-layer';
+    this.layer.appendChild(this.el);
+    document.body.appendChild(this.layer);
 
     this.anim = new BluebirdAnimator(this.img, { frames, timing, reducedMotion });
     this.lastFrame = null;
@@ -133,6 +140,7 @@ export class BluebirdFlight {
       this.hit.addEventListener('click', this.#onTap);
     }
 
+    this.#fitLayer();
     window.addEventListener('resize', this.#onLayout);
     this.resizeObs = new ResizeObserver(this.#onLayout);   // late fonts/images move perches
     this.resizeObs.observe(document.body);
@@ -145,7 +153,7 @@ export class BluebirdFlight {
     clearTimeout(this.scrollTimer);
     clearTimeout(this.idleTimer);
     this.anim.destroy();
-    this.el.remove();
+    this.layer.remove();
   }
 
   /* ---- where ---- */
@@ -207,8 +215,14 @@ export class BluebirdFlight {
   };
 
   #onLayout = () => {
+    this.#fitLayer();
     if (!this.busy && this.perchedOn) this.#snapToPerch();
   };
+
+  /** The layer covers the whole page, so the bird is only ever clipped at its edges. */
+  #fitLayer() {
+    this.layer.style.height = `${document.body.offsetHeight}px`;
+  }
 
   #snapToPerch() {
     this.pos = this.#pointOf(this.perchedOn);

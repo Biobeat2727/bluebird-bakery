@@ -295,6 +295,8 @@ form .note { margin: 0; min-height: 1.6em; }
 /* ---- the bird ----
    Absolutely positioned in document space; BluebirdFlight writes the transform.
    Never intercepts clicks: it lands on links and buttons. */
+/* Page-sized and clipped, so a bird past the page's edge never widens it. */
+.bluebird-layer { position: absolute; left: 0; top: 0; width: 100%; z-index: 50; overflow: hidden; overflow: clip; pointer-events: none; }
 .bluebird { position: absolute; left: 0; top: 0; z-index: 50; pointer-events: none; line-height: 0; will-change: transform; }
 .bluebird img { display: block; width: auto; height: auto; max-width: none; object-fit: initial; user-select: none; }
 /* Breathing while perched. Uses the separate `scale` property so it stacks with
