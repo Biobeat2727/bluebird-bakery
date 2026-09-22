@@ -4,23 +4,33 @@
 (function () {
   var OPEN = 8, CLOSE = 15;   // 8am to 3pm, every day
 
+  /* Days the bakery is shut, as 'YYYY-MM-DD': 'why'. The top bar and today's
+     column in the bread schedule both say so. Add holidays here. */
+  var CLOSED = {
+    // '2026-12-25': 'Christmas',
+  };
+
   // The bakery's clock, not the visitor's.
-  var day = null, hour = null;
+  var day = null, hour = null, date = null;
   try {
-    var parts = new Intl.DateTimeFormat('en-US', {
+    var parts = {};
+    new Intl.DateTimeFormat('en-US', {
       timeZone: 'America/Los_Angeles', weekday: 'long', hour: 'numeric', hour12: false,
-    }).formatToParts(new Date());
-    parts.forEach(function (p) {
-      if (p.type === 'weekday') day = p.value;
-      if (p.type === 'hour') hour = Number(p.value) % 24;
-    });
+      year: 'numeric', month: '2-digit', day: '2-digit',
+    }).formatToParts(new Date()).forEach(function (p) { parts[p.type] = p.value; });
+    day = parts.weekday;
+    hour = Number(parts.hour) % 24;
+    date = parts.year + '-' + parts.month + '-' + parts.day;
   } catch (e) { /* leave the static text in place */ }
+
+  var closedToday = date && CLOSED[date];
 
   var status = document.getElementById('openStatus');
   if (status && hour !== null) {
-    status.textContent = hour >= OPEN && hour < CLOSE
-      ? 'Open now until 3'
-      : 'Closed now. Open daily 8 to 3';
+    if (closedToday) status.textContent = 'Closed today for ' + closedToday;
+    else if (hour < OPEN) status.textContent = 'Opens today at 8';
+    else if (hour < CLOSE) status.textContent = 'Open now until 3';
+    else status.textContent = 'Opens tomorrow at 8';
   }
 
   var today = day && document.querySelector('.week [data-day="' + day + '"]');
@@ -28,8 +38,13 @@
     today.classList.add('today');
     today.setAttribute('aria-current', 'date');
     today.querySelector('.label').textContent = 'Today, ' + day;
+    if (closedToday) {
+      var breads = today.querySelector('p:last-child');
+      breads.className = 'quiet';
+      breads.textContent = 'Closed for ' + closedToday;
+    }
     today.setAttribute('data-perch', '');
-    today.setAttribute('data-perch-at', '0.72');
+    today.setAttribute('data-perch-at', '0.5');   // the gap between day and breads
     today.setAttribute('data-perch-face', 'left');
   }
 

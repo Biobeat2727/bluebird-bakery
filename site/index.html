@@ -2,9 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Bluebird Bakery | Bread, pastry and breakfast in Sandpoint, Idaho</title>
 <meta name="description" content="Bread and pastry baked every morning at 329 N First Ave, Sandpoint. Full kitchen menu and Doma coffee. Open daily 8 to 3.">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0565c2">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bluebird Bakery, Sandpoint, Idaho">
+<meta property="og:description" content="Bread and pastry baked every morning. Full kitchen menu and Doma coffee. Open daily 8 to 3.">
+<meta property="og:image" content="share.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -16,15 +24,15 @@
 
 <a class="skip" href="#top">Skip to content</a>
 
-<p class="utility"><span id="openStatus">Open daily 8 to 3</span> &middot; 329 N First Ave, Sandpoint</p>
+<p class="utility"><span id="openStatus">Open daily 8 to 3</span><span class="sep" aria-hidden="true">&middot;</span><a href="https://www.google.com/maps/search/?api=1&query=Bluebird+Bakery+329+N+First+Ave+Sandpoint+ID">329 N First Ave<span class="u-wide">, Sandpoint</span></a><span class="sep u-wide" aria-hidden="true">&middot;</span><a class="u-wide" href="tel:+12082658730">(208) 265-8730</a></p>
 
 <header class="header">
-  <a class="wordmark" href="#top"><span data-perch data-perch-at="0.97" data-perch-dy="9" data-perch-face="left">Bluebird</span><small>Bakery</small></a>
+  <a class="lockup" href="#top"><img src="brand/badge.png" srcset="brand/badge-180.webp 180w, brand/badge-360.webp 360w, brand/badge-540.webp 540w, brand/badge-720.webp 720w, brand/badge-1080.webp 1080w" sizes="(max-width: 800px) 4.5rem, 6.5rem" width="360" height="360" alt=""><span class="wordmark"><span data-perch data-perch-at="0.97" data-perch-dy="9" data-perch-face="left">Bluebird</span><small>Bakery</small></span></a>
   <nav aria-label="Sections">
-    <a href="#bake">Bread and pastry</a>
+    <a href="#bake">Bread<span class="u-wide"> and pastry</span></a>
     <a href="#kitchen">Kitchen</a>
     <a href="#coffee">Coffee</a>
-    <a href="#story">Our story</a>
+    <a href="#story"><span class="u-wide">Our </span>Story</a>
     <a href="#visit">Visit</a>
   </nav>
 </header>
@@ -32,11 +40,15 @@
 <main id="top">
 
   <section class="hero">
-    <figure><img src="photos/rack-loaves.jpg" srcset="photos/rack-loaves-640.webp 640w, photos/rack-loaves-1024.webp 1024w" sizes="(max-width: 800px) 100vw, 50vw" width="1024" height="683" alt="Sourdough loaves cooling on a wire rack in the bakery" fetchpriority="high"></figure>
     <figure><img src="photos/croissant-latte.jpg" srcset="photos/croissant-latte-640.webp 640w, photos/croissant-latte-1200.webp 1200w, photos/croissant-latte-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 50vw" width="1200" height="812" alt="A croissant cut in half to show the layers, next to a latte" fetchpriority="high"></figure>
+    <figure><img src="photos/rack-loaves.jpg" srcset="photos/rack-loaves-640.webp 640w, photos/rack-loaves-1024.webp 1024w" sizes="50vw" width="1024" height="683" alt="Sourdough loaves cooling on a wire rack in the bakery" loading="lazy"></figure>
     <div class="hero-over">
-      <h1>Baked every morning</h1>
-      <a class="btn" href="#schedule" data-perch data-perch-at="0.5" data-perch-face="right">See today's bread</a>
+      <h1 class="sr">Bluebird Bakery, Sandpoint, Idaho</h1>
+      <p class="hero-line">Bread<span aria-hidden="true"> &middot; </span>Pastry<span aria-hidden="true"> &middot; </span>Breakfast and lunch<span aria-hidden="true"> &middot; </span>Coffee</p>
+      <p class="hero-actions">
+        <a class="btn" href="#schedule" data-perch data-perch-at="0.5" data-perch-face="right">Today's bread</a>
+        <a class="btn btn-ghost" href="#kitchen">Kitchen menu</a>
+      </p>
     </div>
   </section>
 
@@ -45,62 +57,55 @@
     <p>Jill Severson opened Bluebird in October 2019. The flour is stone ground at two Washington mills, and the produce comes from farms like Pack River and Mountain Cloud. The daily bake is out of the oven within an hour and a half of opening.</p>
   </section>
 
-  <!-- ---- bread and pastry ---- -->
+  <!-- ---- bread, then pastry ----
+       Bread keeps its prices and its weekly schedule together, so on a phone
+       nothing comes between them. -->
   <section id="bake" aria-labelledby="bake-title">
     <h2 class="sr" id="bake-title">Bread and pastry</h2>
-    <div class="pair" data-perch data-perch-at="0.5" data-perch-face="right">
-      <div class="pair-item">
-        <figure class="pair-photo has-title"><img src="photos/oven-loaves.jpg" srcset="photos/oven-loaves-640.webp 640w, photos/oven-loaves-1024.webp 1024w" sizes="(max-width: 800px) 100vw, 50vw" width="1024" height="683" alt="Loaves being pulled from the deck oven on a peel" loading="lazy" decoding="async"><h3 class="pair-title">Bread</h3></figure>
-        <div class="pair-body">
-          <p class="note">Loaf $10. Baguette $5. Baked every day:</p>
-          <dl data-perch data-perch-at="0.2" data-perch-face="right">
-            <div><dt>Sourdough</dt><dd>$10</dd></div>
-            <div><dt>Seeded sourdough</dt><dd>$10</dd></div>
-            <div><dt>Salted rosemary</dt><dd>$10</dd></div>
-            <div><dt>Pugliese</dt><dd>$10</dd></div>
-            <div><dt>Baguette</dt><dd>$5</dd></div>
-          </dl>
-          <p class="note">Rye, olive and challah come out on certain days. The schedule is below.</p>
-        </div>
-      </div>
-      <div class="pair-item">
-        <figure class="pair-photo has-title"><img src="photos/croissant-cruffin.jpg" srcset="photos/croissant-cruffin-640.webp 640w, photos/croissant-cruffin-1200.webp 1200w, photos/croissant-cruffin-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 50vw" width="1200" height="747" alt="A croissant cut open beside a cruffin topped with chocolate" loading="lazy" decoding="async"><h3 class="pair-title">Pastry</h3></figure>
-        <div class="pair-body">
-          <dl data-perch data-perch-at="0.8" data-perch-face="left">
-            <div><dt>Plain croissant</dt><dd>$3.75</dd></div>
-            <div><dt>Everything croissant</dt><dd>$4.00</dd></div>
-            <div><dt>Ham and cheese croissant</dt><dd>$5.25</dd></div>
-            <div><dt>Chocolate croissant</dt><dd>$4.75</dd></div>
-            <div><dt>Almond croissant</dt><dd>$4.75</dd></div>
-            <div><dt>Huckleberry vanilla danish</dt><dd>$4.75</dd></div>
-            <div><dt>Brioche cinnamon roll</dt><dd>$6.25</dd></div>
-            <div><dt>Cruffin</dt><dd>$6.00</dd></div>
-            <div><dt>Monkey bread</dt><dd>$4.00</dd></div>
-            <div><dt>Chocolate chip cookie</dt><dd>$4.25</dd></div>
-            <div><dt>Snickerdoodle</dt><dd>$3.00</dd></div>
-          </dl>
-          <p class="note">Seasonal pastries and desserts rotate in.</p>
-        </div>
+    <div class="split" data-perch data-perch-at="0.5" data-perch-face="right">
+      <figure class="pair-photo has-title"><img src="photos/oven-loaves.jpg" srcset="photos/oven-loaves-640.webp 640w, photos/oven-loaves-1024.webp 1024w" sizes="(max-width: 800px) 100vw, 50vw" width="1024" height="683" alt="Loaves being pulled from the deck oven on a peel" loading="lazy" decoding="async"><h3 class="pair-title">Bread</h3></figure>
+      <div class="split-body">
+        <dl>
+          <div><dt>Loaf</dt><dd>10</dd></div>
+          <div><dt>Baguette</dt><dd>5</dd></div>
+        </dl>
+        <p class="note">The dailies are sourdough, seeded sourdough, salted rosemary, pugliese and baguette, baked every day.</p>
+        <h4 class="label" id="schedule">This week</h4>
+        <ol class="week">
+          <li data-day="Monday"><p class="label">Monday</p><p><span class="quiet">Dailies</span><span>Rye</span></p></li>
+          <li data-day="Tuesday"><p class="label">Tuesday</p><p class="quiet">Dailies</p></li>
+          <li data-day="Wednesday"><p class="label">Wednesday</p><p><span class="quiet">Dailies</span><span>Olive</span><span>Rye</span></p></li>
+          <li data-day="Thursday"><p class="label">Thursday</p><p class="quiet">Dailies</p></li>
+          <li data-day="Friday"><p class="label">Friday</p><p><span class="quiet">Dailies</span><span>Rye</span><span>Challah</span></p></li>
+          <li data-day="Saturday"><p class="label">Saturday</p><p><span class="quiet">Dailies</span><span>Olive</span></p></li>
+          <li data-day="Sunday"><p class="label">Sunday</p><p class="quiet">Dailies</p></li>
+        </ol>
+        <p class="note">The flour is stone ground fresh at Cairnspring Mills and Bluebird Grain Farms in Washington. Nothing added, nothing bleached, and the bran and germ stay in.</p>
       </div>
     </div>
-  </section>
-
-  <section id="schedule" class="wrap schedule">
-    <div class="section-head">
-      <p class="label">Bread schedule</p>
-      <h2 data-perch data-perch-at="0.97" data-perch-dy="8" data-perch-face="left">What's baking this week</h2>
-      <p>The five daily breads are baked every morning. These are the extras.</p>
+    <div class="split split-flip" data-perch data-perch-at="0.5" data-perch-face="left">
+      <figure class="pair-photo has-title"><img src="photos/croissant-cruffin.jpg" srcset="photos/croissant-cruffin-640.webp 640w, photos/croissant-cruffin-1200.webp 1200w, photos/croissant-cruffin-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 50vw" width="1200" height="747" alt="A croissant cut open beside a cruffin topped with chocolate" loading="lazy" decoding="async"><h3 class="pair-title">Pastry</h3></figure>
+      <div class="split-body">
+        <h4 class="label">Croissants</h4>
+        <dl>
+          <div><dt>Plain</dt><dd>3.75</dd></div>
+          <div><dt>Everything</dt><dd>4.00</dd></div>
+          <div><dt>Chocolate</dt><dd>4.75</dd></div>
+          <div><dt>Almond</dt><dd>4.75</dd></div>
+          <div><dt>Ham and cheese</dt><dd>5.25</dd></div>
+        </dl>
+        <h4 class="label">And the rest</h4>
+        <dl>
+          <div><dt>Huckleberry vanilla danish</dt><dd>4.75</dd></div>
+          <div><dt>Brioche cinnamon roll</dt><dd>6.25</dd></div>
+          <div><dt>Cruffin</dt><dd>6.00</dd></div>
+          <div><dt>Monkey bread</dt><dd>4.00</dd></div>
+          <div><dt>Chocolate chip cookie</dt><dd>4.25</dd></div>
+          <div><dt>Snickerdoodle</dt><dd>3.00</dd></div>
+        </dl>
+        <p class="note">Seasonal pastries and desserts rotate in.</p>
+      </div>
     </div>
-    <ol class="week">
-      <li data-day="Monday"><p class="label">Monday</p><p>Rye</p></li>
-      <li data-day="Tuesday"><p class="label">Tuesday</p><p class="quiet">Daily breads</p></li>
-      <li data-day="Wednesday"><p class="label">Wednesday</p><p>Olive<br>Rye</p></li>
-      <li data-day="Thursday"><p class="label">Thursday</p><p class="quiet">Daily breads</p></li>
-      <li data-day="Friday"><p class="label">Friday</p><p>Rye<br>Challah</p></li>
-      <li data-day="Saturday"><p class="label">Saturday</p><p>Olive</p></li>
-      <li data-day="Sunday"><p class="label">Sunday</p><p class="quiet">Daily breads</p></li>
-    </ol>
-    <p class="note">The flour comes freshly stone ground from Cairnspring Mills and Bluebird Grain Farms in Washington. Nothing added, nothing bleached, and the bran and germ stay in.</p>
   </section>
 
   <!-- ---- kitchen ---- -->
@@ -112,20 +117,26 @@
     <div class="wrap kitchen">
       <div class="section-head">
         <p class="label">Kitchen</p>
-        <h2 data-perch data-perch-at="0.97" data-perch-dy="8" data-perch-face="left">Made to order, 8 to 3</h2>
+        <h2 data-perch data-perch-at="0.97" data-perch-dy="4" data-perch-face="left">Made to order, 8 to 3</h2>
       </div>
-      <div class="dishes" data-perch data-perch-at="0.5" data-perch-face="right">
-        <article><h3>Quiche with simple salad <span>$15</span></h3><p>Seasonal variety. Takes 15 minutes.</p></article>
-        <article><h3>Avocado toast <span>$16</span></h3><p>Sliced avo, shaved veg and a poached egg.</p></article>
-        <article><h3>Smoked salmon toast <span>$18</span></h3><p>Capers and dill ricotta, shaved veg, togarashi oil.</p></article>
-        <article><h3>Simple breakfast <span>$9</span></h3><p>Scrambled eggs, green onion, toast and jam.</p></article>
-        <article><h3>Croissant breakfast sando <span>$17</span></h3><p>Scrambled eggs, cheddar and green onion with bacon, ham, or avocado and Mama Lil's. Egg and cheese only, $15.</p></article>
-        <article><h3>Breakfast ciabatta <span>$18</span></h3><p>Scrambled egg with cheddar, green onion, ham, bacon, avocado, Calabrian chili aioli.</p></article>
-        <article data-perch data-perch-at="0.85" data-perch-face="left"><h3>Turkey avo croissant <span>$17</span></h3><p>Turkey, avo, mayo, cheddar, lettuce and tomato.</p></article>
-        <article><h3>The veg ciabatta <span>$16</span></h3><p>Za'atar goat cheese, roasted beets, avo, cucumber, Mama Lil's pickled peppers, pea shoots.</p></article>
-        <article><h3>Kickin' chicken <span>$14</span></h3><p>Spicy chicken and pepperjack, warmed, with chipotle aioli, tomato and red onion on telera.</p></article>
-        <article><h3>House sando <span>$15</span></h3><p>Your bread (baguette, ciabatta, telera, brioche or daily sliced) and your meat (ham, turkey or spicy chicken). Mayo, Fat Pig mustard, cheddar, lettuce, tomato.</p></article>
-        <article><h3>The Morty <span>$14</span></h3><p>Seared Olympia Provisions mortadella, burrata, heirloom tomato, garlic aioli and turnip greens on house brioche.</p></article>
+      <div class="dishes">
+        <div class="course">
+          <h3 class="course-title">Breakfast</h3>
+          <article><h4>Simple breakfast <span>9</span></h4><p>Scrambled eggs, green onion, toast and jam.</p></article>
+          <article><h4>Avocado toast <span>16</span></h4><p>Sliced avo, shaved veg and a poached egg.</p></article>
+          <article><h4>Smoked salmon toast <span>18</span></h4><p>Capers and dill ricotta, shaved veg, togarashi oil.</p></article>
+          <article><h4>Croissant breakfast sando <span>17</span></h4><p>Scrambled eggs, cheddar and green onion with bacon, ham, or avocado and Mama Lil's. Egg and cheese only, 15.</p></article>
+          <article><h4>Breakfast ciabatta <span>18</span></h4><p>Scrambled egg with cheddar, green onion, ham, bacon, avocado, Calabrian chili aioli.</p></article>
+          <article><h4>Quiche with simple salad <span>15</span></h4><p>Seasonal variety. Takes 15 minutes.</p></article>
+        </div>
+        <div class="course">
+          <h3 class="course-title">Sandwiches</h3>
+          <article><h4>Turkey avo croissant <span>17</span></h4><p>Turkey, avo, mayo, cheddar, lettuce and tomato.</p></article>
+          <article><h4>The veg ciabatta <span>16</span></h4><p>Za'atar goat cheese, roasted beets, avo, cucumber, Mama Lil's pickled peppers, pea shoots.</p></article>
+          <article><h4>Kickin' chicken <span>14</span></h4><p>Spicy chicken and pepperjack, warmed, with chipotle aioli, tomato and red onion on telera.</p></article>
+          <article><h4>House sando <span>15</span></h4><p>Your bread (baguette, ciabatta, telera, brioche or daily sliced) and your meat (ham, turkey or spicy chicken). Mayo, Fat Pig mustard, cheddar, lettuce, tomato.</p></article>
+          <article><h4>The Morty <span>14</span></h4><p>Seared Olympia Provisions mortadella, burrata, heirloom tomato, garlic aioli and turnip greens on house brioche.</p></article>
+        </div>
       </div>
     </div>
   </section>
@@ -135,7 +146,7 @@
     <div class="wrap coffee">
       <div>
         <p class="label">Coffee and drinks</p>
-        <h2 data-perch data-perch-at="0.6" data-perch-dy="8" data-perch-face="right">Doma coffee, house-made syrups</h2>
+        <h2 data-perch data-perch-at="0.6" data-perch-dy="4" data-perch-face="right">Doma coffee, house-made syrups</h2>
         <p>Organic coffee roasted by Doma in Post Falls. Teas are from Rishi.</p>
         <table>
           <thead><tr><th scope="col"><span class="sr">Drink</span></th><th scope="col">8oz</th><th scope="col">12oz</th><th scope="col">16oz</th></tr></thead>
@@ -149,7 +160,7 @@
             <tr><th scope="row">London fog</th><td>4.00</td><td>4.50</td><td>5.00</td></tr>
           </tbody>
         </table>
-        <dl class="short" data-perch data-perch-at="0.3" data-perch-face="right">
+        <dl class="short">
           <div><dt>Espresso</dt><dd>2.75</dd></div>
           <div><dt>Macchiato, 3oz</dt><dd>3.50</dd></div>
           <div><dt>Cortado, 5oz</dt><dd>4.00</dd></div>
@@ -159,12 +170,16 @@
       </div>
       <div>
         <figure class="coffee-photo" data-perch data-perch-at="0.78" data-perch-face="left"><img src="photos/latte-doma.jpg" srcset="photos/latte-doma-640.webp 640w, photos/latte-doma-1200.webp 1200w, photos/latte-doma-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 40vw" width="1200" height="675" alt="A latte with rosetta art beside a bag of Doma coffee" loading="lazy" decoding="async"></figure>
-        <p class="label">Add .75</p>
+        <p class="label">Extras, 75¢ each</p>
         <p class="note">House-made syrups: vanilla, caramel, chocolate, white chocolate, lavender, hazelnut and a seasonal one. Coconut, oat or almond milk. An extra shot.</p>
-        <p class="label">Rishi teas</p>
-        <p class="note">Earl Grey, English Breakfast, Yuzu Peach Green, Jade Cloud Green, Jasmine Green, Peppermint, Turmeric Ginger, Chamomile, Blueberry Hibiscus.</p>
-        <p class="label">Also</p>
-        <p class="note">Upside Kombucha, milk, orange juice, sparkling water, beer, champagne and mimosas.</p>
+        <details class="more">
+          <summary class="label">Rishi teas</summary>
+          <p class="note">Earl Grey, English Breakfast, Yuzu Peach Green, Jade Cloud Green, Jasmine Green, Peppermint, Turmeric Ginger, Chamomile, Blueberry Hibiscus.</p>
+        </details>
+        <details class="more">
+          <summary class="label">Kombucha, juice, beer and mimosas</summary>
+          <p class="note">Upside Kombucha, milk, orange juice, sparkling water, beer, champagne and mimosas.</p>
+        </details>
       </div>
     </div>
   </section>
@@ -177,31 +192,30 @@
       <p>Before the storefront, Jill Severson baked bread at home and sold it at the Sandpoint Farmers' Market. She opened Bluebird in October 2019.</p>
       <p>Jill grew up in Thousand Oaks, California. She studied pastry at The French Culinary Institute and bread at the International Culinary Center in New York, and worked at Jacques Torres Chocolate while she was in school. Then came more than a decade in Seattle at Mistral Kitchen, The Essential Baking Company and The Fairmont Olympic Hotel, and a stint as pastry chef at Majestic Valley Wilderness Lodge, a heli-ski lodge in Glacier View, Alaska.</p>
       <p>She moved to Sandpoint for a smaller town and more time outside. When she's not at the bakery she's snowboarding, out on a boat or camping.</p>
+      <div class="seal">
+        <img class="badge badge-seal" src="brand/badge.png" srcset="brand/badge-180.webp 180w, brand/badge-360.webp 360w, brand/badge-540.webp 540w" sizes="7rem" width="360" height="360" alt="" loading="lazy" decoding="async">
+        <p>The name is a skier's word. A bluebird day is the clear blue sky after a night of snow, which is what the badge shows: sun over the mountain, snowflake underneath.</p>
+      </div>
     </div>
     <figure class="story-photo" data-perch data-perch-at="0.25" data-perch-face="right"><img src="photos/rolling-chocolate.jpg" srcset="photos/rolling-chocolate-640.webp 640w, photos/rolling-chocolate-1200.webp 1200w, photos/rolling-chocolate-2000.webp 2000w" sizes="(max-width: 800px) 100vw, 40vw" width="1200" height="1800" alt="A baker's hands rolling a chocolate croissant on the bench" loading="lazy" decoding="async"></figure>
   </section>
 
   <section id="partners" class="wrap partners">
     <div class="hair" data-perch data-perch-at="0.9" data-perch-face="left"></div>
-    <div class="section-head">
-      <p class="label">Partners</p>
-      <h2>Who we buy from</h2>
-      <p>Jill moved here to be part of a small community, so the bakery buys close to home wherever it can.</p>
+    <div class="partners-grid">
+      <div class="section-head">
+        <p class="label">Partners</p>
+        <h2>Who we buy from</h2>
+        <p>Jill moved here to be part of a small community, so the bakery buys close to home wherever it can.</p>
+      </div>
+      <dl class="partner-list">
+        <div><dt>Flour</dt><dd>Cairnspring Mills and Bluebird Grain Farms</dd></div>
+        <div><dt>Produce</dt><dd>Cloud Eleven Farms, Mountain Cloud Farm, Pack River Farm and Ronnigers Organics, with apples from the Sandpoint Organic Agricultural Center</dd></div>
+        <div><dt>Coffee and drinks</dt><dd>Doma Coffee and Upside Kombucha</dd></div>
+        <div><dt>Smoked salmon</dt><dd>Thunder's Catch</dd></div>
+        <div><dt>In the room</dt><dd>Flowers From the Heart for cut flowers, Old Tree for the furniture</dd></div>
+      </dl>
     </div>
-    <ul class="partner-list">
-      <li>Doma Coffee <span>Coffee</span></li>
-      <li>Cairnspring Mills <span>Flour</span></li>
-      <li>Bluebird Grain Farms <span>Flour</span></li>
-      <li>Cloud Eleven Farms <span>Produce</span></li>
-      <li>Mountain Cloud Farm <span>Produce</span></li>
-      <li>Pack River Farm <span>Produce</span></li>
-      <li>Ronnigers Organics <span>Produce</span></li>
-      <li>Sandpoint Organic Agricultural Center <span>Apples</span></li>
-      <li>Thunder's Catch <span>Smoked salmon</span></li>
-      <li>Upside Kombucha <span>Kombucha</span></li>
-      <li>Flowers From the Heart <span>Cut flowers</span></li>
-      <li>Old Tree <span>Furniture</span></li>
-    </ul>
   </section>
 
   <!-- ---- special orders + contact ---- -->
@@ -216,18 +230,17 @@
     </div>
     <div class="message">
       <p class="label">Get in touch</p>
-      <h2 data-perch data-perch-at="0.97" data-perch-dy="8" data-perch-face="left">Send a message</h2>
+      <h2>Message us</h2>
 
       <!-- Shown until the form has somewhere to send to. -->
       <div id="contactFallback">
-        <p>The quickest way to reach us is by phone, or stop in any day between 8 and 3.</p>
-        <p><a class="btn btn-dark" href="tel:+12082658730">Call (208) 265-8730</a></p>
-        <p class="note">We're on <a href="https://www.instagram.com/bluebirdbakeryid/">Instagram</a> and <a href="https://www.facebook.com/bluebirdbakeryid/">Facebook</a> too.</p>
+        <p>For anything that can't wait, call or stop in between 8 and 3. Otherwise we answer messages on Instagram and Facebook.</p>
+        <p class="social"><a class="btn" href="https://www.instagram.com/bluebirdbakeryid/">Instagram</a><a class="btn btn-ghost" href="https://www.facebook.com/bluebirdbakeryid/">Facebook</a></p>
       </div>
 
       <!-- To switch the form on, put a form endpoint URL (Formspree, Basin, Netlify
            or similar, accepting a JSON POST) in data-endpoint. today.js does the rest. -->
-      <form id="contactForm" data-endpoint="" novalidate hidden>
+      <form id="contactForm" data-endpoint="" method="post" novalidate hidden>
         <div class="field">
           <label for="cf-name">Name</label>
           <input id="cf-name" type="text" name="name" autocomplete="name" maxlength="120" required aria-describedby="cf-name-err">
@@ -245,7 +258,7 @@
         </div>
         <!-- Honeypot: people never see or fill this; bots do. -->
         <div class="sr" aria-hidden="true"><label for="cf-website">Leave this empty</label><input id="cf-website" type="text" name="website" tabindex="-1" autocomplete="off"></div>
-        <button class="btn btn-dark" type="submit">Send message</button>
+        <button class="btn" type="submit">Send message</button>
         <p class="note" id="formNote" role="status">We reply by email. Check your junk folder if you don't see it.</p>
       </form>
     </div>
@@ -259,7 +272,7 @@
         <p class="label">Hours</p>
         <dl>
           <div><dt>Every day</dt><dd>8 to 3</dd></div>
-          <div><dt>Kitchen</dt><dd>All day</dd></div>
+          <div><dt>Kitchen</dt><dd>Full menu, 8 to 3</dd></div>
         </dl>
         <p class="note hours-note">The daily bake is out of the oven within an hour and a half of opening.</p>
       </div>
@@ -275,9 +288,16 @@
 </main>
 
 <footer class="footer">
-  <p class="wordmark"><span data-perch data-perch-at="0.97" data-perch-dy="5" data-perch-face="left">Bluebird</span><small>Bakery</small></p>
-  <p class="label"><a href="https://www.instagram.com/bluebirdbakeryid/">Instagram</a> &middot; <a href="https://www.facebook.com/bluebirdbakeryid/">Facebook</a> &middot; 329 N First Ave, Sandpoint</p>
+  <img class="badge badge-footer" src="brand/badge.png" srcset="brand/badge-180.webp 180w, brand/badge-360.webp 360w, brand/badge-540.webp 540w" sizes="10.5rem" width="360" height="360" alt="Bluebird Bakery logo: a mountain and rising sun above a snowflake" loading="lazy" decoding="async" data-perch data-perch-at="0.5" data-perch-dy="3" data-perch-face="left">
+  <p class="label"><a href="https://www.instagram.com/bluebirdbakeryid/">Instagram</a> &middot; <a href="https://www.facebook.com/bluebirdbakeryid/">Facebook</a></p>
+  <p class="label footer-address">329 N First Ave, Sandpoint, Idaho</p>
 </footer>
+
+<!-- Phones only: the two things people on their way need, always in reach. -->
+<nav class="quickbar" aria-label="Call or get directions">
+  <a href="tel:+12082658730">Call</a>
+  <a href="https://www.google.com/maps/search/?api=1&query=Bluebird+Bakery+329+N+First+Ave+Sandpoint+ID">Directions</a>
+</nav>
 
 <script src="src/today.js"></script>
 <script type="module" src="src/main.js"></script>
